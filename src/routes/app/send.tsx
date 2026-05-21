@@ -14,13 +14,15 @@ export const Route = createFileRoute("/app/send")({ component: SendPage });
 type Admin = { id: string; first_name: string; last_name: string; account_number: string };
 
 function SendPage() {
-  const { profile, refresh } = useAuth();
+  const { user, profile, refresh } = useAuth();
   const navigate = useNavigate();
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [adminId, setAdminId] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
+  const [totalReceived, setTotalReceived] = useState(0);
+  const [totalSent, setTotalSent] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -33,6 +35,16 @@ function SendPage() {
       if (profs && profs.length > 0) setAdminId(profs[0].id);
     })();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("transactions").select("amount, from_user, to_user, status")
+      .then(({ data }) => {
+        const rows = (data ?? []) as { amount: number; from_user: string | null; to_user: string | null; status: string }[];
+        setTotalReceived(rows.filter((t) => t.to_user === user.id && t.status === "completed").reduce((s, t) => s + Number(t.amount), 0));
+        setTotalSent(rows.filter((t) => t.from_user === user.id && t.status === "completed").reduce((s, t) => s + Number(t.amount), 0));
+      });
+  }, [user]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,14 +63,34 @@ function SendPage() {
     navigate({ to: "/app/history" });
   };
 
+  const amountNum = Number(amount) || 0;
+  const newBalance = (profile?.balance ?? 0) - amountNum;
+
   return (
     <AppShell>
       <h1 className="text-xl font-bold mb-4">Envoyer à l'administration</h1>
-      <Card className="p-4 mb-4 bg-secondary/50">
+      <Card className="p-4 mb-3 bg-secondary/50">
         <div className="text-sm text-muted-foreground">Solde disponible</div>
-        <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <div className="text-2xl font-bold break-all">{formatXOF(profile?.balance ?? 0)}</div>
         <div className="text-xs text-muted-foreground mt-1">Aucun frais — transfert gratuit.</div>
       </Card>
+      <div className="grid grid-cols-2 gap-3 mb-3">
+        <Card className="p-3 bg-success/10 border-success/30">
+          <div className="text-[11px] uppercase tracking-wider text-success">Solde reçu</div>
+          <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
+        </Card>
+        <Card className="p-3 bg-accent/10 border-accent/30">
+          <div className="text-[11px] uppercase tracking-wider text-accent">Solde envoyé</div>
+          <div className="text-base font-bold text-accent mt-1 break-all">-{formatXOF(totalSent)}</div>
+        </Card>
+      </div>
+      {amountNum > 0 && (
+        <Card className="p-3 mb-4 border-dashed">
+          <div className="text-xs text-muted-foreground mb-2">Aperçu après envoi</div>
+          <div className="flex justify-between text-sm"><span>Montant à déduire</span><span className="font-semibold text-accent">-{formatXOF(amountNum)}</span></div>
+          <div className="flex justify-between text-sm mt-1 pt-2 border-t border-border"><span>Nouveau solde</span><span className={`font-bold break-all ${newBalance < 0 ? "text-destructive" : "text-primary"}`}>{formatXOF(newBalance)}</span></div>
+        </Card>
+      )}
       <form onSubmit={submit} className="space-y-4">
         <div className="space-y-2">
           <Label>Administrateur destinataire</Label>
