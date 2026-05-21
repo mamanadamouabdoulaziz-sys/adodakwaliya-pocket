@@ -64,7 +64,7 @@ function Landing() {
         </div>
 
         <footer className="text-xs text-primary-foreground/60 pt-6">
-          © {new Date().getFullYear()} ETS ADO DA KWALIYA — Tous droits réservés.
+          © {new Date().getFullYear()} ADO DA KWALIYA — Tous droits réservés.
         </footer>
       </div>
     </div>
