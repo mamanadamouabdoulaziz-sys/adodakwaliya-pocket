@@ -85,6 +85,40 @@ function AdminPage() {
           </Card>
         ))}
       </div>
+
+      <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
+        <Mail className="h-4 w-4" /> Messages des utilisateurs
+        {messages.some((m) => !m.read) && (
+          <Badge variant="destructive" className="ml-1">
+            {messages.filter((m) => !m.read).length} non lus
+          </Badge>
+        )}
+      </h2>
+      <div className="space-y-2">
+        {messages.length === 0 && (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Aucun message reçu.</Card>
+        )}
+        {messages.map((m) => {
+          const sender = users.find((u) => u.id === m.user_id);
+          return (
+            <Card key={m.id} className={`p-4 ${!m.read ? "border-accent" : ""}`} onClick={() => markRead(m)}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="font-semibold">{m.subject}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {sender ? `${sender.first_name} ${sender.last_name} • ${sender.phone}` : m.user_id}
+                  </div>
+                </div>
+                {!m.read && <Badge variant="secondary">Nouveau</Badge>}
+              </div>
+              <p className="text-sm mt-2 whitespace-pre-wrap">{m.message}</p>
+              <div className="text-xs text-muted-foreground mt-2">
+                {new Date(m.created_at).toLocaleString("fr-FR")}
+              </div>
+            </Card>
+          );
+        })}
+      </div>
     </AppShell>
   );
 }
