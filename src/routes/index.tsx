@@ -51,7 +51,7 @@ function Landing() {
           <div className="grid sm:grid-cols-3 gap-4 mt-12">
             {[
               { icon: Wallet, t: "Compte unique", d: "Numéro de compte généré automatiquement." },
-              { icon: Zap, t: "Transferts gratuits", d: "Aucun frais d'envoi ni de réception." },
+              { icon: ShoppingBag, t: "Faites vos achats", d: "Dans notre boutique via notre application." },
               { icon: ShieldCheck, t: "Sécurisé", d: "Authentification, chiffrement, protection anti-fraude." },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="rounded-2xl bg-black/40 backdrop-blur-sm p-5 border border-white/15">
