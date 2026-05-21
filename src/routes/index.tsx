@@ -50,7 +50,7 @@ function Landing() {
 
           <div className="grid sm:grid-cols-3 gap-4 mt-12">
             {[
-              { icon: Wallet, t: "Compte unique", d: "Numéro ETS-XXXXXXXX généré automatiquement." },
+              { icon: Wallet, t: "Compte unique", d: "Numéro de compte généré automatiquement." },
               { icon: Zap, t: "Transferts gratuits", d: "Aucun frais d'envoi ni de réception." },
               { icon: ShieldCheck, t: "Sécurisé", d: "Authentification, chiffrement, protection anti-fraude." },
             ].map(({ icon: Icon, t, d }) => (
