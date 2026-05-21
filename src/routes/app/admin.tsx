@@ -274,3 +274,49 @@ function EditDialog({ user, onDone }: { user: UserRow; onDone: () => void }) {
     </Dialog>
   );
 }
+
+function ReplyDialog({ request, onDone }: { request: PRRow; onDone: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [reply, setReply] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const update = async (status: "approved" | "rejected" | "fulfilled") => {
+    setBusy(true);
+    const { error } = await supabase
+      .from("purchase_requests")
+      .update({ status, admin_reply: reply || null })
+      .eq("id", request.id);
+    setBusy(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Demande mise à jour");
+      setOpen(false);
+      setReply("");
+      onDone();
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">Répondre</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Répondre à la demande</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label>Message (facultatif)</Label>
+            <Input value={reply} onChange={(e) => setReply(e.target.value)} maxLength={300} />
+          </div>
+        </div>
+        <DialogFooter className="flex-wrap gap-2">
+          <Button variant="outline" onClick={() => update("rejected")} disabled={busy}>Refuser</Button>
+          <Button onClick={() => update("approved")} disabled={busy}>Approuver</Button>
+          <Button onClick={() => update("fulfilled")} disabled={busy} className="bg-accent text-accent-foreground hover:bg-accent/90">Livrée</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
