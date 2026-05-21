@@ -10,15 +10,17 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil } from "lucide-react";
+import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
 type UserRow = { id: string; first_name: string; last_name: string; phone: string; account_number: string; balance: number; suspended: boolean };
+type MsgRow = { id: string; user_id: string; subject: string; message: string; read: boolean; created_at: string };
 
 function AdminPage() {
   const { isAdmin, refresh } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
+  const [messages, setMessages] = useState<MsgRow[]>([]);
   const [stats, setStats] = useState({ users: 0, tx: 0, volume: 0 });
 
   const load = async () => {
@@ -27,9 +29,17 @@ function AdminPage() {
     const { data: txs } = await supabase.from("transactions").select("amount");
     const volume = (txs ?? []).reduce((s: number, t: { amount: number }) => s + Number(t.amount), 0);
     setStats({ users: data?.length ?? 0, tx: txs?.length ?? 0, volume });
+    const { data: msgs } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+    setMessages((msgs as MsgRow[]) ?? []);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
+
+  const markRead = async (m: MsgRow) => {
+    if (m.read) return;
+    await supabase.from("contact_messages").update({ read: true }).eq("id", m.id);
+    load();
+  };
 
   const toggleSuspend = async (u: UserRow) => {
     const { error } = await supabase.rpc("admin_set_suspended", { _user_id: u.id, _suspended: !u.suspended });
@@ -74,6 +84,40 @@ function AdminPage() {
             </div>
           </Card>
         ))}
+      </div>
+
+      <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
+        <Mail className="h-4 w-4" /> Messages des utilisateurs
+        {messages.some((m) => !m.read) && (
+          <Badge variant="destructive" className="ml-1">
+            {messages.filter((m) => !m.read).length} non lus
+          </Badge>
+        )}
+      </h2>
+      <div className="space-y-2">
+        {messages.length === 0 && (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Aucun message reçu.</Card>
+        )}
+        {messages.map((m) => {
+          const sender = users.find((u) => u.id === m.user_id);
+          return (
+            <Card key={m.id} className={`p-4 ${!m.read ? "border-accent" : ""}`} onClick={() => markRead(m)}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="font-semibold">{m.subject}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {sender ? `${sender.first_name} ${sender.last_name} • ${sender.phone}` : m.user_id}
+                  </div>
+                </div>
+                {!m.read && <Badge variant="secondary">Nouveau</Badge>}
+              </div>
+              <p className="text-sm mt-2 whitespace-pre-wrap">{m.message}</p>
+              <div className="text-xs text-muted-foreground mt-2">
+                {new Date(m.created_at).toLocaleString("fr-FR")}
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </AppShell>
   );

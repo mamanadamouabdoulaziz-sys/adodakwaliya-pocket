@@ -20,7 +20,7 @@ function Landing() {
     <div className="min-h-screen bg-brand-gradient text-primary-foreground">
       <div className="max-w-3xl mx-auto px-6 py-12 flex flex-col min-h-screen">
         <header className="flex items-center justify-between">
-          <div className="font-bold tracking-widest">ETS ADO DA KWALIYA</div>
+          <div className="font-bold tracking-widest">ADO DA KWALIYA</div>
           <Button variant="secondary" onClick={() => navigate({ to: "/auth" })}>Se connecter</Button>
         </header>
 
@@ -50,7 +50,7 @@ function Landing() {
 
           <div className="grid sm:grid-cols-3 gap-4 mt-12">
             {[
-              { icon: Wallet, t: "Compte unique", d: "Numéro ETS-XXXXXXXX généré automatiquement." },
+              { icon: Wallet, t: "Compte unique", d: "Numéro de compte généré automatiquement." },
               { icon: Zap, t: "Transferts gratuits", d: "Aucun frais d'envoi ni de réception." },
               { icon: ShieldCheck, t: "Sécurisé", d: "Authentification, chiffrement, protection anti-fraude." },
             ].map(({ icon: Icon, t, d }) => (
@@ -64,7 +64,7 @@ function Landing() {
         </div>
 
         <footer className="text-xs text-primary-foreground/60 pt-6">
-          © {new Date().getFullYear()} ETS ADO DA KWALIYA — Tous droits réservés.
+          © {new Date().getFullYear()} ADO DA KWALIYA — Tous droits réservés.
         </footer>
       </div>
     </div>

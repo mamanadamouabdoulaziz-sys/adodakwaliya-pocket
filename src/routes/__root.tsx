@@ -50,8 +50,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "ETS ADO DA KWALIYA MONEY" },
-      { name: "description", content: "Application de transferts internes sécurisés — ETS ADO DA KWALIYA." },
+      { title: "ADO DA KWALIYA MONEY" },
+      { name: "description", content: "Application de transferts internes sécurisés — ADO DA KWALIYA." },
       { name: "theme-color", content: "#0f1b3d" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
