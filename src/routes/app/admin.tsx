@@ -10,17 +10,19 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail } from "lucide-react";
+import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart } from "lucide-react";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
 type UserRow = { id: string; first_name: string; last_name: string; phone: string; account_number: string; balance: number; suspended: boolean };
 type MsgRow = { id: string; user_id: string; subject: string; message: string; read: boolean; created_at: string };
+type PRRow = { id: string; user_id: string; product_id: string; quantity: number; note: string | null; status: string; admin_reply: string | null; created_at: string; products: { name: string; price: number } | null };
 
 function AdminPage() {
   const { isAdmin, refresh } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [messages, setMessages] = useState<MsgRow[]>([]);
+  const [requests, setRequests] = useState<PRRow[]>([]);
   const [stats, setStats] = useState({ users: 0, tx: 0, volume: 0 });
 
   const load = async () => {
@@ -31,6 +33,11 @@ function AdminPage() {
     setStats({ users: data?.length ?? 0, tx: txs?.length ?? 0, volume });
     const { data: msgs } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
     setMessages((msgs as MsgRow[]) ?? []);
+    const { data: prs } = await supabase
+      .from("purchase_requests")
+      .select("*, products(name, price)")
+      .order("created_at", { ascending: false });
+    setRequests((prs as unknown as PRRow[]) ?? []);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
@@ -84,6 +91,55 @@ function AdminPage() {
             </div>
           </Card>
         ))}
+      </div>
+
+      <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
+        <ShoppingCart className="h-4 w-4" /> Demandes d'achat
+        {requests.some((r) => r.status === "pending") && (
+          <Badge variant="destructive" className="ml-1">
+            {requests.filter((r) => r.status === "pending").length} en attente
+          </Badge>
+        )}
+      </h2>
+      <div className="space-y-2">
+        {requests.length === 0 && (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Aucune demande.</Card>
+        )}
+        {requests.map((r) => {
+          const sender = users.find((u) => u.id === r.user_id);
+          return (
+            <Card key={r.id} className={`p-4 ${r.status === "pending" ? "border-accent" : ""}`}>
+              <div className="flex items-start justify-between gap-2 flex-wrap">
+                <div className="min-w-0">
+                  <div className="font-semibold">
+                    {r.products?.name ?? "Produit"} × {r.quantity}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {sender ? `${sender.first_name} ${sender.last_name} • ${sender.phone}` : r.user_id}
+                  </div>
+                  {r.products && (
+                    <div className="text-xs mt-1">
+                      Total estimé : <span className="font-semibold">{formatXOF(r.products.price * r.quantity)}</span>
+                    </div>
+                  )}
+                </div>
+                <Badge variant={r.status === "pending" ? "secondary" : r.status === "rejected" ? "destructive" : "outline"}>
+                  {r.status}
+                </Badge>
+              </div>
+              {r.note && <p className="text-sm mt-2 whitespace-pre-wrap">Note : {r.note}</p>}
+              {r.admin_reply && <p className="text-sm mt-1 text-muted-foreground whitespace-pre-wrap">Réponse : {r.admin_reply}</p>}
+              <div className="text-xs text-muted-foreground mt-2">
+                {new Date(r.created_at).toLocaleString("fr-FR")}
+              </div>
+              {r.status === "pending" && (
+                <div className="mt-3">
+                  <ReplyDialog request={r} onDone={load} />
+                </div>
+              )}
+            </Card>
+          );
+        })}
       </div>
 
       <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
@@ -213,6 +269,52 @@ function EditDialog({ user, onDone }: { user: UserRow; onDone: () => void }) {
         </div>
         <DialogFooter>
           <Button onClick={submit} disabled={busy}>{busy ? "Enregistrement…" : "Enregistrer"}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ReplyDialog({ request, onDone }: { request: PRRow; onDone: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [reply, setReply] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const update = async (status: "approved" | "rejected" | "fulfilled") => {
+    setBusy(true);
+    const { error } = await supabase
+      .from("purchase_requests")
+      .update({ status, admin_reply: reply || null })
+      .eq("id", request.id);
+    setBusy(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Demande mise à jour");
+      setOpen(false);
+      setReply("");
+      onDone();
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">Répondre</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Répondre à la demande</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label>Message (facultatif)</Label>
+            <Input value={reply} onChange={(e) => setReply(e.target.value)} maxLength={300} />
+          </div>
+        </div>
+        <DialogFooter className="flex-wrap gap-2">
+          <Button variant="outline" onClick={() => update("rejected")} disabled={busy}>Refuser</Button>
+          <Button onClick={() => update("approved")} disabled={busy}>Approuver</Button>
+          <Button onClick={() => update("fulfilled")} disabled={busy} className="bg-accent text-accent-foreground hover:bg-accent/90">Livrée</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
