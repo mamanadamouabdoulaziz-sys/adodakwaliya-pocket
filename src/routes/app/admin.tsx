@@ -10,12 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail } from "lucide-react";
+import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart } from "lucide-react";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
 type UserRow = { id: string; first_name: string; last_name: string; phone: string; account_number: string; balance: number; suspended: boolean };
 type MsgRow = { id: string; user_id: string; subject: string; message: string; read: boolean; created_at: string };
+type PRRow = { id: string; user_id: string; product_id: string; quantity: number; note: string | null; status: string; admin_reply: string | null; created_at: string; products: { name: string; price: number } | null };
 
 function AdminPage() {
   const { isAdmin, refresh } = useAuth();
