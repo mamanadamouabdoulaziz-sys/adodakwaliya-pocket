@@ -20,6 +20,7 @@ type MsgRow = { id: string; user_id: string; subject: string; message: string; r
 function AdminPage() {
   const { isAdmin, refresh } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
+  const [messages, setMessages] = useState<MsgRow[]>([]);
   const [stats, setStats] = useState({ users: 0, tx: 0, volume: 0 });
 
   const load = async () => {
@@ -28,9 +29,17 @@ function AdminPage() {
     const { data: txs } = await supabase.from("transactions").select("amount");
     const volume = (txs ?? []).reduce((s: number, t: { amount: number }) => s + Number(t.amount), 0);
     setStats({ users: data?.length ?? 0, tx: txs?.length ?? 0, volume });
+    const { data: msgs } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+    setMessages((msgs as MsgRow[]) ?? []);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
+
+  const markRead = async (m: MsgRow) => {
+    if (m.read) return;
+    await supabase.from("contact_messages").update({ read: true }).eq("id", m.id);
+    load();
+  };
 
   const toggleSuspend = async (u: UserRow) => {
     const { error } = await supabase.rpc("admin_set_suspended", { _user_id: u.id, _suspended: !u.suspended });
