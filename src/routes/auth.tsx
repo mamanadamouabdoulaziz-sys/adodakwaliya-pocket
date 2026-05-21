@@ -126,12 +126,14 @@ function LoginForm() {
 function SignupForm() {
   const [firstName, setFirst] = useState("");
   const [lastName, setLast] = useState("");
-  const [phone, setPhone] = useState("");
+  const [dial, setDial] = useState("+227");
+  const [local, setLocal] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const phone = `${dial}${local.replace(/\s+/g, "")}`;
     try {
       z.string().trim().min(1, "Prénom requis").max(60).parse(firstName);
       z.string().trim().min(1, "Nom requis").max(60).parse(lastName);
@@ -168,8 +170,8 @@ function SignupForm() {
         </div>
       </div>
       <div className="space-y-2">
-        <Label>Numéro de téléphone</Label>
-        <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+227 90 00 00 00" inputMode="tel" />
+        <Label>Pays & numéro de téléphone</Label>
+        <CountryPhoneSelect dial={dial} setDial={setDial} local={local} setLocal={setLocal} />
       </div>
       <div className="space-y-2">
         <Label>Mot de passe</Label>
