@@ -1,0 +1,96 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { AppShell, formatXOF } from "@/components/AppShell";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowDownLeft, ArrowUpRight, Eye, EyeOff, Send, History } from "lucide-react";
+
+export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
+
+type Tx = { id: string; reference: string; type: string; amount: number; created_at: string; from_user: string | null; to_user: string | null; };
+
+function Dashboard() {
+  const { profile, user } = useAuth();
+  const [hidden, setHidden] = useState(false);
+  const [recent, setRecent] = useState<Tx[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("transactions").select("*").order("created_at", { ascending: false }).limit(5)
+      .then(({ data }) => setRecent((data as Tx[]) ?? []));
+  }, [user]);
+
+  return (
+    <AppShell>
+      <Card className="bg-card-gradient text-primary-foreground p-6 rounded-2xl shadow-elegant border-0">
+        <div className="text-xs uppercase tracking-widest opacity-70">Solde disponible</div>
+        <div className="flex items-end justify-between mt-1">
+          <div className="text-3xl font-bold">
+            {hidden ? "•••••• XOF" : formatXOF(profile?.balance ?? 0)}
+          </div>
+          <button onClick={() => setHidden(!hidden)} className="opacity-80 hover:opacity-100">
+            {hidden ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+          </button>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <div className="opacity-70">Numéro de compte</div>
+            <div className="font-mono font-semibold tracking-wider">{profile?.account_number ?? "—"}</div>
+          </div>
+          <div>
+            <div className="opacity-70">Statut</div>
+            <div className="font-semibold">
+              {profile?.suspended ? <span className="text-destructive">Suspendu</span> : "Actif"}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-2 gap-3 mt-4">
+        <Link to="/app/send">
+          <Button className="w-full h-16 bg-accent text-accent-foreground hover:bg-accent/90 shadow-glow gap-2">
+            <Send className="h-5 w-5" /> Envoyer
+          </Button>
+        </Link>
+        <Link to="/app/history">
+          <Button variant="outline" className="w-full h-16 gap-2">
+            <History className="h-5 w-5" /> Historique
+          </Button>
+        </Link>
+      </div>
+
+      <div className="mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-semibold">Dernières transactions</h2>
+          <Link to="/app/history" className="text-sm text-accent hover:underline">Tout voir</Link>
+        </div>
+        <div className="space-y-2">
+          {recent.length === 0 && (
+            <div className="text-sm text-muted-foreground text-center py-8">Aucune transaction pour le moment.</div>
+          )}
+          {recent.map((tx) => {
+            const incoming = tx.to_user === user?.id;
+            return (
+              <Card key={tx.id} className="p-4 flex items-center gap-3">
+                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${incoming ? "bg-success/15 text-success" : "bg-accent/15 text-accent"}`}>
+                  {incoming ? <ArrowDownLeft className="h-5 w-5" /> : <ArrowUpRight className="h-5 w-5" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium truncate">
+                    {tx.type === "admin_to_user" ? "Recharge reçue" : "Envoi à l'administration"}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">{tx.reference}</div>
+                </div>
+                <div className={`font-semibold ${incoming ? "text-success" : ""}`}>
+                  {incoming ? "+" : "-"}{formatXOF(tx.amount)}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </AppShell>
+  );
+}
