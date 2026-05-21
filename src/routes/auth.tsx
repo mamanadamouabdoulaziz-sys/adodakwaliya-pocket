@@ -31,9 +31,10 @@ function AuthPage() {
   return (
     <div className="min-h-screen bg-brand-gradient flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="text-center mb-6 text-primary-foreground">
-          <div className="text-xs tracking-widest uppercase opacity-80">ADO DA KWALIYA</div>
-          <div className="text-2xl font-bold">MONEY</div>
+        <div className="text-center mb-8">
+          <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-glow-orange">
+            ADO DA KWALIYA
+          </div>
         </div>
         <div className="bg-card rounded-2xl shadow-elegant p-6">
           <Tabs defaultValue={mode}>
