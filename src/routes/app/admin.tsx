@@ -15,6 +15,7 @@ import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail } from "lucid
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
 type UserRow = { id: string; first_name: string; last_name: string; phone: string; account_number: string; balance: number; suspended: boolean };
+type MsgRow = { id: string; user_id: string; subject: string; message: string; read: boolean; created_at: string };
 
 function AdminPage() {
   const { isAdmin, refresh } = useAuth();
