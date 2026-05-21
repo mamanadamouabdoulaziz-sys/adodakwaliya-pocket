@@ -43,21 +43,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    let alive = true;
+    const stopLoading = () => {
+      if (alive) setLoading(false);
+    };
+    const loadingFallback = window.setTimeout(stopLoading, 1500);
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       if (s?.user) {
-        setTimeout(() => loadProfile(s.user.id), 0);
+        window.setTimeout(() => loadProfile(s.user.id).finally(stopLoading), 0);
       } else {
         setProfile(null);
         setIsAdmin(false);
+        stopLoading();
       }
     });
     supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (!alive) return;
       setSession(s);
       if (s?.user) loadProfile(s.user.id).finally(() => setLoading(false));
       else setLoading(false);
-    });
-    return () => subscription.unsubscribe();
+    }).catch(() => stopLoading()).finally(() => window.clearTimeout(loadingFallback));
+    return () => {
+      alive = false;
+      window.clearTimeout(loadingFallback);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const refresh = async () => {
