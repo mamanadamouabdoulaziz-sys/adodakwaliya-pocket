@@ -20,7 +20,7 @@ function Landing() {
     <div className="min-h-screen bg-brand-gradient text-primary-foreground">
       <div className="max-w-3xl mx-auto px-6 py-12 flex flex-col min-h-screen">
         <header className="flex items-center justify-between">
-          <div className="font-bold tracking-widest">ETS ADO DA KWALIYA</div>
+          <div className="font-bold tracking-widest">ADO DA KWALIYA</div>
           <Button variant="secondary" onClick={() => navigate({ to: "/auth" })}>Se connecter</Button>
         </header>
 
