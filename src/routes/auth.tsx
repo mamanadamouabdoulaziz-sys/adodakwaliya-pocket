@@ -53,13 +53,43 @@ function AuthPage() {
   );
 }
 
+function CountryPhoneSelect({
+  dial, setDial, local, setLocal,
+}: { dial: string; setDial: (v: string) => void; local: string; setLocal: (v: string) => void }) {
+  return (
+    <div className="flex gap-2">
+      <Select value={dial} onValueChange={setDial}>
+        <SelectTrigger className="w-[130px] shrink-0">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="max-h-72">
+          {AFRICAN_COUNTRIES.map((c) => (
+            <SelectItem key={c.code} value={c.dial}>
+              <span className="mr-2">{c.flag}</span>{c.dial} {c.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Input
+        className="flex-1"
+        value={local}
+        onChange={(e) => setLocal(e.target.value.replace(/[^0-9 ]/g, ""))}
+        placeholder="90 00 00 00"
+        inputMode="tel"
+      />
+    </div>
+  );
+}
+
 function LoginForm() {
-  const [phone, setPhone] = useState("");
+  const [dial, setDial] = useState("+227");
+  const [local, setLocal] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const phone = `${dial}${local.replace(/\s+/g, "")}`;
     try {
       phoneSchema.parse(phone);
       passwordSchema.parse(password);
@@ -80,7 +110,7 @@ function LoginForm() {
     <form onSubmit={submit} className="space-y-4 mt-4">
       <div className="space-y-2">
         <Label>Numéro de téléphone</Label>
-        <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+227 90 00 00 00" inputMode="tel" />
+        <CountryPhoneSelect dial={dial} setDial={setDial} local={local} setLocal={setLocal} />
       </div>
       <div className="space-y-2">
         <Label>Mot de passe</Label>
