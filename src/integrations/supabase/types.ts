@@ -137,6 +137,50 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_requests: {
+        Row: {
+          admin_reply: string | null
+          created_at: string
+          id: string
+          note: string | null
+          product_id: string
+          quantity: number
+          status: Database["public"]["Enums"]["purchase_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_reply?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          product_id: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["purchase_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_reply?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          product_id?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["purchase_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_requests_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transactions: {
         Row: {
           amount: number
@@ -222,6 +266,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      purchase_status: "pending" | "approved" | "rejected" | "fulfilled"
       tx_status: "completed" | "failed"
       tx_type: "user_to_admin" | "admin_to_user"
     }
@@ -352,6 +397,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      purchase_status: ["pending", "approved", "rejected", "fulfilled"],
       tx_status: ["completed", "failed"],
       tx_type: ["user_to_admin", "admin_to_user"],
     },
