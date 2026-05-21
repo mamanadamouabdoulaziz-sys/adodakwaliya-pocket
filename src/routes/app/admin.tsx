@@ -94,6 +94,55 @@ function AdminPage() {
       </div>
 
       <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
+        <ShoppingCart className="h-4 w-4" /> Demandes d'achat
+        {requests.some((r) => r.status === "pending") && (
+          <Badge variant="destructive" className="ml-1">
+            {requests.filter((r) => r.status === "pending").length} en attente
+          </Badge>
+        )}
+      </h2>
+      <div className="space-y-2">
+        {requests.length === 0 && (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Aucune demande.</Card>
+        )}
+        {requests.map((r) => {
+          const sender = users.find((u) => u.id === r.user_id);
+          return (
+            <Card key={r.id} className={`p-4 ${r.status === "pending" ? "border-accent" : ""}`}>
+              <div className="flex items-start justify-between gap-2 flex-wrap">
+                <div className="min-w-0">
+                  <div className="font-semibold">
+                    {r.products?.name ?? "Produit"} × {r.quantity}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {sender ? `${sender.first_name} ${sender.last_name} • ${sender.phone}` : r.user_id}
+                  </div>
+                  {r.products && (
+                    <div className="text-xs mt-1">
+                      Total estimé : <span className="font-semibold">{formatXOF(r.products.price * r.quantity)}</span>
+                    </div>
+                  )}
+                </div>
+                <Badge variant={r.status === "pending" ? "secondary" : r.status === "rejected" ? "destructive" : "outline"}>
+                  {r.status}
+                </Badge>
+              </div>
+              {r.note && <p className="text-sm mt-2 whitespace-pre-wrap">Note : {r.note}</p>}
+              {r.admin_reply && <p className="text-sm mt-1 text-muted-foreground whitespace-pre-wrap">Réponse : {r.admin_reply}</p>}
+              <div className="text-xs text-muted-foreground mt-2">
+                {new Date(r.created_at).toLocaleString("fr-FR")}
+              </div>
+              {r.status === "pending" && (
+                <div className="mt-3">
+                  <ReplyDialog request={r} onDone={load} />
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
         <Mail className="h-4 w-4" /> Messages des utilisateurs
         {messages.some((m) => !m.read) && (
           <Badge variant="destructive" className="ml-1">
