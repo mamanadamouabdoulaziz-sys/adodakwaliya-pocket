@@ -32,7 +32,7 @@ function AuthPage() {
     <div className="min-h-screen bg-brand-gradient flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-glow-orange">
+          <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-glow-black">
             ADO DA KWALIYA
           </div>
         </div>
