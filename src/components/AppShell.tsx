@@ -59,7 +59,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 pb-28">{children}</main>
 
       <nav className="fixed bottom-0 inset-x-0 bg-card border-t border-border z-30">
-        <div className="max-w-3xl mx-auto grid grid-cols-5">
+        <div className="max-w-3xl mx-auto grid grid-cols-6">
           {tabs.map(({ to, icon: Icon, label }) => {
             const active = location.pathname === to;
             return (
