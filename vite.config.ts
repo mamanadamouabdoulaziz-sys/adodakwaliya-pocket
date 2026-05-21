@@ -12,4 +12,21 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  vite: {
+    optimizeDeps: {
+      include: [
+        "@radix-ui/react-label",
+        "@radix-ui/react-select",
+        "@radix-ui/react-slot",
+        "@radix-ui/react-tabs",
+        "@supabase/supabase-js",
+        "class-variance-authority",
+        "clsx",
+        "lucide-react",
+        "sonner",
+        "tailwind-merge",
+        "zod",
+      ],
+    },
+  },
 });

@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/send")({ component: SendPage });
@@ -63,16 +62,19 @@ function SendPage() {
       <form onSubmit={submit} className="space-y-4">
         <div className="space-y-2">
           <Label>Administrateur destinataire</Label>
-          <Select value={adminId} onValueChange={setAdminId}>
-            <SelectTrigger><SelectValue placeholder="Sélectionnez" /></SelectTrigger>
-            <SelectContent>
-              {admins.map((a) => (
-                <SelectItem key={a.id} value={a.id}>
-                  {a.first_name} {a.last_name} — {a.account_number}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <select
+            value={adminId}
+            onChange={(e) => setAdminId(e.target.value)}
+            className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={admins.length === 0}
+          >
+            <option value="">Sélectionnez</option>
+            {admins.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.first_name} {a.last_name} — {a.account_number}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="space-y-2">
           <Label>Montant (XOF)</Label>
