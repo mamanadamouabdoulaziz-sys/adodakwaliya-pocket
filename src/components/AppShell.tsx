@@ -27,6 +27,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
     { to: "/app/send", icon: Send, label: "Envoyer" },
     { to: "/app/history", icon: History, label: "Historique" },
     { to: "/app/products", icon: Package, label: "Produits" },
+    { to: "/app/contact", icon: Mail, label: "Contact" },
     { to: "/app/notifications", icon: Bell, label: "Alertes" },
   ];
 
