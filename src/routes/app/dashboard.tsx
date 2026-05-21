@@ -25,9 +25,9 @@ function Dashboard() {
   return (
     <AppShell>
       <Card className="bg-card-gradient text-primary-foreground p-6 rounded-2xl shadow-elegant border-0">
-        <div className="text-xs uppercase tracking-widest opacity-70">Solde disponible</div>
+        <div className="text-xs uppercase tracking-widest text-primary">Solde disponible</div>
         <div className="flex items-end justify-between mt-1">
-          <div className="text-3xl font-bold">
+          <div className="text-3xl font-bold text-primary">
             {hidden ? "•••••• XOF" : formatXOF(profile?.balance ?? 0)}
           </div>
           <button onClick={() => setHidden(!hidden)} className="opacity-80 hover:opacity-100">
@@ -36,12 +36,12 @@ function Dashboard() {
         </div>
         <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
           <div>
-            <div className="opacity-70">Numéro de compte</div>
-            <div className="font-mono font-semibold tracking-wider">{profile?.account_number ?? "—"}</div>
+            <div className="text-primary">Numéro de compte</div>
+            <div className="font-mono font-semibold tracking-wider text-primary">{profile?.account_number ?? "—"}</div>
           </div>
           <div>
-            <div className="opacity-70">Statut</div>
-            <div className="font-semibold">
+            <div className="text-primary">Statut</div>
+            <div className="font-semibold text-primary">
               {profile?.suspended ? <span className="text-destructive">Suspendu</span> : "Actif"}
             </div>
           </div>
