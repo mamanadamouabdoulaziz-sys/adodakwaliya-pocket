@@ -189,6 +189,7 @@ function EditPriceDialog({ product, onDone }: { product: Product; onDone: () => 
   const [price, setPrice] = useState(String(product.price));
   const [inStock, setInStock] = useState(product.in_stock);
   const [busy, setBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const submit = async () => {
     const n = Number(price);
@@ -210,8 +211,21 @@ function EditPriceDialog({ product, onDone }: { product: Product; onDone: () => 
     }
   };
 
+  const remove = async () => {
+    setBusy(true);
+    const { error } = await supabase.from("products").delete().eq("id", product.id);
+    setBusy(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Produit supprimé");
+      setOpen(false);
+      setConfirmDelete(false);
+      onDone();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(v) => { setOpen(v); setConfirmDelete(false); }}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline" className="w-full">
           Modifier le prix
@@ -221,29 +235,48 @@ function EditPriceDialog({ product, onDone }: { product: Product; onDone: () => 
         <DialogHeader>
           <DialogTitle>Modifier : {product.name}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <Label>Prix (XOF)</Label>
-            <Input
-              inputMode="numeric"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
+        {confirmDelete ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Confirmez-vous la suppression de <strong>{product.name}</strong> ? Cette action est irréversible.
+            </p>
+            <DialogFooter className="flex-wrap gap-2">
+              <Button variant="outline" onClick={() => setConfirmDelete(false)} disabled={busy}>Annuler</Button>
+              <Button variant="destructive" onClick={remove} disabled={busy}>
+                {busy ? "Suppression…" : "Confirmer la suppression"}
+              </Button>
+            </DialogFooter>
           </div>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={inStock}
-              onChange={(e) => setInStock(e.target.checked)}
-            />
-            Disponible en stock
-          </label>
-        </div>
-        <DialogFooter>
-          <Button onClick={submit} disabled={busy}>
-            {busy ? "Enregistrement…" : "Enregistrer"}
-          </Button>
-        </DialogFooter>
+        ) : (
+          <>
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label>Prix (XOF)</Label>
+                <Input
+                  inputMode="numeric"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={inStock}
+                  onChange={(e) => setInStock(e.target.checked)}
+                />
+                Disponible en stock
+              </label>
+            </div>
+            <DialogFooter className="flex-wrap gap-2 justify-between">
+              <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(true)} className="text-destructive hover:text-destructive gap-1">
+                <Trash2 className="h-3.5 w-3.5" /> Supprimer
+              </Button>
+              <Button onClick={submit} disabled={busy}>
+                {busy ? "Enregistrement…" : "Enregistrer"}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
