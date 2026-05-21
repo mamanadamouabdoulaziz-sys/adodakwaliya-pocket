@@ -32,7 +32,7 @@ function AuthPage() {
     <div className="min-h-screen bg-brand-gradient flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="text-center mb-6 text-primary-foreground">
-          <div className="text-xs tracking-widest uppercase opacity-80">ETS ADO DA KWALIYA</div>
+          <div className="text-xs tracking-widest uppercase opacity-80">ADO DA KWALIYA</div>
           <div className="text-2xl font-bold">MONEY</div>
         </div>
         <div className="bg-card rounded-2xl shadow-elegant p-6">
