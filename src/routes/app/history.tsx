@@ -12,7 +12,7 @@ export const Route = createFileRoute("/app/history")({ component: HistoryPage })
 type Tx = { id: string; reference: string; type: string; amount: number; created_at: string; from_user: string | null; to_user: string | null; status: string; note: string | null };
 
 function HistoryPage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [txs, setTxs] = useState<Tx[]>([]);
 
   useEffect(() => {
@@ -21,9 +21,33 @@ function HistoryPage() {
       .then(({ data }) => setTxs((data as Tx[]) ?? []));
   }, [user]);
 
+  const totalReceived = txs.filter((t) => t.to_user === user?.id && t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
+  const totalSent = txs.filter((t) => t.from_user === user?.id && t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
+  const net = totalReceived - totalSent;
+
   return (
     <AppShell>
       <h1 className="text-xl font-bold mb-4">Historique des transactions</h1>
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <Card className="p-3 bg-success/10 border-success/30">
+          <div className="text-[11px] uppercase tracking-wider text-success flex items-center gap-1"><ArrowDownLeft className="h-3 w-3" /> Solde reçu</div>
+          <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
+        </Card>
+        <Card className="p-3 bg-accent/10 border-accent/30">
+          <div className="text-[11px] uppercase tracking-wider text-accent flex items-center gap-1"><ArrowUpRight className="h-3 w-3" /> Solde envoyé</div>
+          <div className="text-base font-bold text-accent mt-1 break-all">-{formatXOF(totalSent)}</div>
+        </Card>
+      </div>
+      <Card className="p-3 mb-4 bg-secondary/40">
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-muted-foreground">Variation nette (reçu − envoyé)</span>
+          <span className={`font-bold break-all ${net >= 0 ? "text-success" : "text-accent"}`}>{net >= 0 ? "+" : ""}{formatXOF(net)}</span>
+        </div>
+        <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border">
+          <span className="text-muted-foreground">Solde actuel</span>
+          <span className="font-bold text-primary break-all">{formatXOF(profile?.balance ?? 0)}</span>
+        </div>
+      </Card>
       {txs.length === 0 && (
         <Card className="p-8 text-center text-muted-foreground">Aucune transaction.</Card>
       )}
