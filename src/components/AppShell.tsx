@@ -36,8 +36,8 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <header className="bg-brand-gradient text-primary-foreground shadow-elegant sticky top-0 z-30">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
-            <div className="text-xs uppercase tracking-widest text-primary-foreground/70">ADO DA KWALIYA</div>
-            <div className="text-base font-semibold">
+            <div className="text-sm uppercase tracking-widest text-white">ADO DA KWALIYA</div>
+            <div className="text-lg font-semibold text-white">
               {profile ? `${profile.first_name} ${profile.last_name}` : "—"}
             </div>
           </div>
