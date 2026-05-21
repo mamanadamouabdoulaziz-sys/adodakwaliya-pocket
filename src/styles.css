@@ -135,4 +135,11 @@
       0 0 20px oklch(0.72 0.17 55 / 0.6),
       0 0 40px oklch(0.72 0.17 55 / 2.5);
   }
+  .text-glow-black {
+    color: oklch(0.97 0 0);
+    text-shadow:
+      0 0 8px oklch(1 0 0 / 0.5),
+      0 0 20px oklch(0 1 55 / 0.8),
+      0 0 40px oklch(0 1 55 / 1.5);
+  }
 }
