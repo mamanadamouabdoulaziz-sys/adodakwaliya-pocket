@@ -16,6 +16,7 @@ import { Route as AppProductsRouteImport } from './routes/app/products'
 import { Route as AppNotificationsRouteImport } from './routes/app/notifications'
 import { Route as AppHistoryRouteImport } from './routes/app/history'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
+import { Route as AppContactRouteImport } from './routes/app/contact'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
 
 const AuthRoute = AuthRouteImport.update({
@@ -53,6 +54,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/app/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppContactRoute = AppContactRouteImport.update({
+  id: '/app/contact',
+  path: '/app/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/app/admin',
   path: '/app/admin',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/app/admin'
+    | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/app/admin'
+    | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/app/admin'
+    | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   AppAdminRoute: typeof AppAdminRoute
+  AppContactRoute: typeof AppContactRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppHistoryRoute: typeof AppHistoryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/contact': {
+      id: '/app/contact'
+      path: '/app/contact'
+      fullPath: '/app/contact'
+      preLoaderRoute: typeof AppContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/admin': {
       id: '/app/admin'
       path: '/app/admin'
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   AppAdminRoute: AppAdminRoute,
+  AppContactRoute: AppContactRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppHistoryRoute: AppHistoryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
@@ -208,3 +229,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
