@@ -128,4 +128,11 @@
   .bg-card-gradient { background: var(--gradient-card); }
   .shadow-elegant { box-shadow: var(--shadow-elegant); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+  .text-glow-orange {
+    color: oklch(0.55 0.19 55);
+    text-shadow:
+      0 0 8px oklch(0.72 0.17 55 / 0.8),
+      0 0 20px oklch(0.72 0.17 55 / 0.6),
+      0 0 40px oklch(0.72 0.17 55 / 2.5);
+  }
 }
