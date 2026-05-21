@@ -99,7 +99,7 @@ function SendDialog({ user, onDone }: { user: UserRow; onDone: () => void }) {
     const n = Number(amount);
     if (!Number.isFinite(n) || n <= 0) { toast.error("Montant invalide"); return; }
     setBusy(true);
-    const { error } = await supabase.rpc("admin_send_to_user", { _amount: n, _user_id: user.id, _note: note || null });
+    const { error } = await supabase.rpc("admin_send_to_user", { _amount: n, _user_id: user.id, _note: note || undefined });
     setBusy(false);
     if (error) toast.error(error.message);
     else { toast.success("Recharge envoyée"); setOpen(false); setAmount(""); setNote(""); onDone(); }

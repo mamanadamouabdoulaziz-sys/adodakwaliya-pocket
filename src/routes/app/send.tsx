@@ -43,7 +43,7 @@ function SendPage() {
     if (profile && n > profile.balance) { toast.error("Solde insuffisant"); return; }
     setBusy(true);
     const { error } = await supabase.rpc("transfer_to_admin", {
-      _amount: n, _admin_id: adminId, _note: note || null,
+      _amount: n, _admin_id: adminId, _note: note || undefined,
     });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
