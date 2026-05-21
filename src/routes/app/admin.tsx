@@ -22,6 +22,7 @@ function AdminPage() {
   const { isAdmin, refresh } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [messages, setMessages] = useState<MsgRow[]>([]);
+  const [requests, setRequests] = useState<PRRow[]>([]);
   const [stats, setStats] = useState({ users: 0, tx: 0, volume: 0 });
 
   const load = async () => {
@@ -32,6 +33,11 @@ function AdminPage() {
     setStats({ users: data?.length ?? 0, tx: txs?.length ?? 0, volume });
     const { data: msgs } = await supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
     setMessages((msgs as MsgRow[]) ?? []);
+    const { data: prs } = await supabase
+      .from("purchase_requests")
+      .select("*, products(name, price)")
+      .order("created_at", { ascending: false });
+    setRequests((prs as unknown as PRRow[]) ?? []);
   };
 
   useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
