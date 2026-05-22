@@ -1,0 +1,1 @@
+CREATE POLICY "Contact: admin deletes" ON public.contact_messages FOR DELETE TO authenticated USING (has_role(auth.uid(), 'admin'::app_role));
