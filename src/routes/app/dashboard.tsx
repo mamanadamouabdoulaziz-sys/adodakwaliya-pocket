@@ -27,7 +27,9 @@ function Dashboard() {
   return (
     <AppShell>
       <div className="flex justify-center mb-4">
-        <img src={sbnLogo} alt="SBN ADO DA KWALIYA Money" className="h-32 w-32 rounded-full object-cover shadow-elegant" />
+        <div className="h-32 w-32 rounded-full p-1 ring-2 ring-white/30 shadow-[0_0_20px_rgba(201,168,76,1),0_0_60px_rgba(201,168,76,0.4)]">
+          <img src={sbnLogo} alt="SBN ADO DA KWALIYA Money" className="h-full w-full rounded-full object-cover" />
+        </div>
       </div>
       <Card className="bg-card-gradient text-primary-foreground p-6 rounded-2xl shadow-elegant border-0">
         <div className="text-xs uppercase tracking-widest text-primary">Solde disponible</div>
