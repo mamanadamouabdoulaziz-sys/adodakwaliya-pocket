@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ADO DA KWALIYA</string>
+    <string name="title_activity_main">ADO DA KWALIYA</string>
+    <string name="package_name">com.adodakwaliya.app</string>
+    <string name="custom_url_scheme">com.adodakwaliya.app</string>
+</resources>
