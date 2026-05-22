@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart } from "lucide-react";
+import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
