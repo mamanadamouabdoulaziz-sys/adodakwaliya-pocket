@@ -282,14 +282,30 @@ function ReplyDialog({ request, onDone }: { request: PRRow; onDone: () => void }
 
   const update = async (status: "approved" | "rejected" | "fulfilled") => {
     setBusy(true);
-    const { error } = await supabase
-      .from("purchase_requests")
-      .update({ status, admin_reply: reply || null })
-      .eq("id", request.id);
+    let error: { message: string } | null = null;
+    if (status === "approved") {
+      const res = await supabase.rpc("approve_purchase_request", {
+        _request_id: request.id,
+        _reply: reply || undefined,
+      });
+      error = res.error;
+    } else {
+      const res = await supabase
+        .from("purchase_requests")
+        .update({ status, admin_reply: reply || null })
+        .eq("id", request.id);
+      error = res.error;
+    }
     setBusy(false);
     if (error) toast.error(error.message);
     else {
-      toast.success("Demande mise à jour");
+      toast.success(
+        status === "approved"
+          ? "Commande approuvée — paiement effectué"
+          : status === "rejected"
+          ? "Commande refusée"
+          : "Commande livrée"
+      );
       setOpen(false);
       setReply("");
       onDone();

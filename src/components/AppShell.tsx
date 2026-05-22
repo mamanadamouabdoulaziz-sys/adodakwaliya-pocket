@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { Home, Send, History, Package, Bell, Shield, LogOut, Mail } from "lucide-react";
+import { Home, Send, History, Package, Bell, Shield, LogOut, Mail, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AppShell({ children, requireAdmin = false }: { children: ReactNode; requireAdmin?: boolean }) {
@@ -24,6 +24,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
 
   const tabs = [
     { to: "/app/dashboard", icon: Home, label: "Accueil" },
+    { to: "/app/order", icon: ShoppingCart, label: "Commande" },
     { to: "/app/send", icon: Send, label: "Envoyer" },
     { to: "/app/history", icon: History, label: "Historique" },
     { to: "/app/products", icon: Package, label: "Produits" },
@@ -59,7 +60,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 pb-28">{children}</main>
 
       <nav className="fixed bottom-0 inset-x-0 bg-card border-t border-border z-30">
-        <div className="max-w-3xl mx-auto grid grid-cols-6">
+        <div className="max-w-3xl mx-auto grid grid-cols-7">
           {tabs.map(({ to, icon: Icon, label }) => {
             const active = location.pathname === to;
             return (

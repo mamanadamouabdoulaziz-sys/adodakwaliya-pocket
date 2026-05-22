@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSendRouteImport } from './routes/app/send'
 import { Route as AppProductsRouteImport } from './routes/app/products'
+import { Route as AppOrderRouteImport } from './routes/app/order'
 import { Route as AppNotificationsRouteImport } from './routes/app/notifications'
 import { Route as AppHistoryRouteImport } from './routes/app/history'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
@@ -37,6 +38,11 @@ const AppSendRoute = AppSendRouteImport.update({
 const AppProductsRoute = AppProductsRouteImport.update({
   id: '/app/products',
   path: '/app/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppOrderRoute = AppOrderRouteImport.update({
+  id: '/app/order',
+  path: '/app/order',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
+    | '/app/order'
     | '/app/products'
     | '/app/send'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
+    | '/app/order'
     | '/app/products'
     | '/app/send'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/app/dashboard'
     | '/app/history'
     | '/app/notifications'
+    | '/app/order'
     | '/app/products'
     | '/app/send'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppHistoryRoute: typeof AppHistoryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppOrderRoute: typeof AppOrderRoute
   AppProductsRoute: typeof AppProductsRoute
   AppSendRoute: typeof AppSendRoute
 }
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/app/products'
       fullPath: '/app/products'
       preLoaderRoute: typeof AppProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/order': {
+      id: '/app/order'
+      path: '/app/order'
+      fullPath: '/app/order'
+      preLoaderRoute: typeof AppOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/notifications': {
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppHistoryRoute: AppHistoryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
+  AppOrderRoute: AppOrderRoute,
   AppProductsRoute: AppProductsRoute,
   AppSendRoute: AppSendRoute,
 }

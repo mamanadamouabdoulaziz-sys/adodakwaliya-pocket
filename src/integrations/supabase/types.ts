@@ -251,6 +251,10 @@ export type Database = {
         Args: { _suspended: boolean; _user_id: string }
         Returns: undefined
       }
+      approve_purchase_request: {
+        Args: { _reply?: string; _request_id: string }
+        Returns: string
+      }
       generate_account_number: { Args: never; Returns: string }
       has_role: {
         Args: {
