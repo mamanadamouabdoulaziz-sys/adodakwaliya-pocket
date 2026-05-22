@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowDownLeft, ArrowUpRight, Eye, EyeOff, Send, History } from "lucide-react";
 
+import sbnLogo from "@/assets/sbn-logo.png";
+
 export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
 
 type Tx = { id: string; reference: string; type: string; amount: number; created_at: string; from_user: string | null; to_user: string | null; };
@@ -24,6 +26,9 @@ function Dashboard() {
 
   return (
     <AppShell>
+      <div className="flex justify-center mb-4">
+        <img src={sbnLogo} alt="SBN ADO DA KWALIYA Money" className="h-32 w-32 rounded-full object-cover shadow-elegant" />
+      </div>
       <Card className="bg-card-gradient text-primary-foreground p-6 rounded-2xl shadow-elegant border-0">
         <div className="text-xs uppercase tracking-widest text-primary">Solde disponible</div>
         <div className="flex items-end justify-between mt-1">
