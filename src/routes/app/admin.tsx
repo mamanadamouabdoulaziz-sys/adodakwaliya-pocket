@@ -48,6 +48,21 @@ function AdminPage() {
     load();
   };
 
+  const deleteMessage = async (m: MsgRow, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Supprimer ce message ?")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("id", m.id);
+    if (error) toast.error(error.message);
+    else { toast.success("Message supprimé"); load(); }
+  };
+
+  const deleteAllRead = async () => {
+    if (!confirm("Supprimer tous les messages lus ?")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("read", true);
+    if (error) toast.error(error.message);
+    else { toast.success("Messages lus supprimés"); load(); }
+  };
+
   const toggleSuspend = async (u: UserRow) => {
     const { error } = await supabase.rpc("admin_set_suspended", { _user_id: u.id, _suspended: !u.suspended });
     if (error) toast.error(error.message);
