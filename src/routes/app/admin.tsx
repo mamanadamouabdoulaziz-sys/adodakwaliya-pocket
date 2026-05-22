@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart } from "lucide-react";
+import { Users, Wallet, BarChart3, Pause, Play, Send, Pencil, Mail, ShoppingCart, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/app/admin")({ component: AdminPage });
 
@@ -46,6 +46,21 @@ function AdminPage() {
     if (m.read) return;
     await supabase.from("contact_messages").update({ read: true }).eq("id", m.id);
     load();
+  };
+
+  const deleteMessage = async (m: MsgRow, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Supprimer ce message ?")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("id", m.id);
+    if (error) toast.error(error.message);
+    else { toast.success("Message supprimé"); load(); }
+  };
+
+  const deleteAllRead = async () => {
+    if (!confirm("Supprimer tous les messages lus ?")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("read", true);
+    if (error) toast.error(error.message);
+    else { toast.success("Messages lus supprimés"); load(); }
   };
 
   const toggleSuspend = async (u: UserRow) => {
@@ -142,14 +157,21 @@ function AdminPage() {
         })}
       </div>
 
-      <h2 className="font-semibold mt-8 mb-3 flex items-center gap-2">
-        <Mail className="h-4 w-4" /> Messages des utilisateurs
-        {messages.some((m) => !m.read) && (
-          <Badge variant="destructive" className="ml-1">
-            {messages.filter((m) => !m.read).length} non lus
-          </Badge>
+      <div className="flex items-center justify-between mt-8 mb-3">
+        <h2 className="font-semibold flex items-center gap-2">
+          <Mail className="h-4 w-4" /> Messages des utilisateurs
+          {messages.some((m) => !m.read) && (
+            <Badge variant="destructive" className="ml-1">
+              {messages.filter((m) => !m.read).length} non lus
+            </Badge>
+          )}
+        </h2>
+        {messages.some((m) => m.read) && (
+          <Button size="sm" variant="outline" onClick={deleteAllRead}>
+            <Trash2 className="h-4 w-4 mr-1" /> Supprimer lus
+          </Button>
         )}
-      </h2>
+      </div>
       <div className="space-y-2">
         {messages.length === 0 && (
           <Card className="p-6 text-center text-sm text-muted-foreground">Aucun message reçu.</Card>
@@ -165,7 +187,12 @@ function AdminPage() {
                     {sender ? `${sender.first_name} ${sender.last_name} • ${sender.phone}` : m.user_id}
                   </div>
                 </div>
-                {!m.read && <Badge variant="secondary">Nouveau</Badge>}
+                <div className="flex items-center gap-2">
+                  {!m.read && <Badge variant="secondary">Nouveau</Badge>}
+                  <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={(e) => deleteMessage(m, e)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <p className="text-sm mt-2 whitespace-pre-wrap">{m.message}</p>
               <div className="text-xs text-muted-foreground mt-2">
