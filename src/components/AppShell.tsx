@@ -24,13 +24,11 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
 
   const navTabs = [
     { to: "/app/send", icon: Send, label: "Envoyer", color: "#fb923c" },
-    { to: "/app/history", icon: History, label: "Historique", color: "#a78bfa" },
     { to: "/app/order", icon: ShoppingCart, label: "Commande", color: "#fbbf24" },
     { to: "/app/products", icon: Package, label: "Produits", color: "#34d399" },
     { to: "/app/wifi", icon: Wifi, label: "WIFI", color: "#3b82f6" },
     { to: "/app/adedeta", icon: Car, label: "ADEDETA", color: "#facc15" },
     { to: "/app/notifications", icon: Bell, label: "Alertes", color: "#ef4444" },
-    { to: "/app/contact", icon: Mail, label: "Contact", color: "#f472b6" },
   ];
 
   return (
