@@ -54,15 +54,19 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
             </Button>
           </div>
         </div>
-        <nav className="border-t border-white/10 bg-black/10">
-          <div className="max-w-3xl mx-auto grid grid-cols-6">
+      </header>
+
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
+        {children}
+        <nav className="mt-6 flex justify-center">
+          <div className="inline-flex flex-wrap justify-center gap-2 bg-card/80 border border-border rounded-2xl px-3 py-2 shadow-md">
             {navTabs.map(({ to, icon: Icon, label, color }) => {
               const active = location.pathname === to;
               return (
                 <Link
                   key={to}
                   to={to}
-                  className="flex flex-col items-center py-2 gap-1 transition-all duration-200"
+                  className="flex flex-col items-center px-2 py-1 gap-1 transition-all duration-200"
                 >
                   <div
                     className={`p-1.5 rounded-xl transition-all duration-200 ${
@@ -75,12 +79,12 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                   >
                     <Icon
                       className="h-5 w-5 transition-colors"
-                      style={{ color: active ? color : "#e5e7eb" }}
+                      style={{ color: active ? color : "#9ca3af" }}
                     />
                   </div>
                   <span
                     className="text-[10px] font-medium transition-colors"
-                    style={{ color: active ? color : "#e5e7eb" }}
+                    style={{ color: active ? color : "#9ca3af" }}
                   >
                     {label}
                   </span>
@@ -89,9 +93,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
             })}
           </div>
         </nav>
-      </header>
-
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">{children}</main>
+      </main>
     </div>
   );
 }
