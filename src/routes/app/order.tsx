@@ -155,6 +155,7 @@ function OrderPage() {
               <span className="text-muted-foreground">Prix unitaire</span>
               <span className="font-medium">{formatXOF(product?.price ?? 0)}</span>
             </div>
+            <NairaHint amount={product?.price ?? 0} className="text-right" />
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Quantité</span>
               <span className="font-medium">{qty}</span>
@@ -163,6 +164,7 @@ function OrderPage() {
               <span className="font-semibold">Total à payer</span>
               <span className="text-lg font-bold text-primary">{formatXOF(total)}</span>
             </div>
+            <NairaHint amount={total} className="text-right" />
             {insufficient && (
               <p className="text-xs text-destructive pt-2">
                 Solde insuffisant. Rechargez votre compte avant d'envoyer la commande.
