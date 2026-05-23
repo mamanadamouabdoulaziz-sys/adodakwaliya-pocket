@@ -173,6 +173,7 @@ function RequestDialog({ product, userId }: { product: Product; userId: string |
               </div>
               <div className="text-sm text-muted-foreground">
                 Prix unitaire : <span className="font-semibold">{formatXOF(product.price)}</span>
+                <NairaHint amount={product.price * (Number(qty) || 1)} />
               </div>
             </div>
             <DialogFooter>
