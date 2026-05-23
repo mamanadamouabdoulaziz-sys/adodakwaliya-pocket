@@ -59,39 +59,43 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
         {children}
         <nav className="mt-8 flex justify-center">
-          <div className="inline-flex flex-wrap justify-center gap-3 bg-card/80 border border-border rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm">
+          <div className="grid grid-cols-3 gap-4 bg-card/80 border border-border rounded-2xl px-6 py-5 shadow-lg backdrop-blur-sm">
             {navTabs.map(({ to, icon: Icon, label, color }) => {
               const active = location.pathname === to;
               return (
                 <Link
                   key={to}
                   to={to}
-                  className="flex flex-col items-center px-3 py-2 gap-1.5 transition-all duration-300 hover:scale-105"
+                  className="flex flex-col items-center justify-center py-3 gap-2 transition-all duration-300 hover:scale-105"
                 >
                   <div
-                    className={`p-2.5 rounded-2xl transition-all duration-300 ${
+                    className={`p-4 rounded-2xl transition-all duration-300 ${
                       active ? "scale-110" : "hover:bg-white/5"
                     }`}
                     style={{
-                      backgroundColor: active ? `${color}35` : "transparent",
-                      boxShadow: active ? `0 0 20px ${color}80, 0 0 40px ${color}40, inset 0 0 12px ${color}30` : "none",
-                      border: active ? `1.5px solid ${color}90` : "1.5px solid transparent",
+                      backgroundColor: active ? `${color}45` : "transparent",
+                      boxShadow: active ? `0 0 30px ${color}AA, 0 0 60px ${color}60, inset 0 0 18px ${color}50` : `0 0 15px ${color}20`,
+                      border: active ? `2px solid ${color}` : `2px solid ${color}40`,
                     }}
                   >
                     <Icon
-                      className="h-6 w-6 transition-colors"
-                      style={{ color: active ? color : "#9ca3af", filter: active ? `drop-shadow(0 0 6px ${color})` : "none" }}
+                      className="h-8 w-8 transition-colors"
+                      style={{ color: active ? color : color, filter: active ? `drop-shadow(0 0 8px ${color})` : `drop-shadow(0 0 4px ${color}60)` }}
                     />
                   </div>
                   <span
-                    className="text-xs font-semibold transition-colors"
-                    style={{ color: active ? color : "#9ca3af", textShadow: active ? `0 0 8px ${color}60` : "none" }}
+                    className="text-sm font-bold transition-colors"
+                    style={{ color: active ? color : color, textShadow: active ? `0 0 12px ${color}AA` : `0 0 6px ${color}60` }}
                   >
                     {label}
                   </span>
                 </Link>
               );
             })}
+            {/* 3 placeholders vides pour compléter la grille 3×3 */}
+            {[1, 2, 3].map((i) => (
+              <div key={`empty-${i}`} className="py-3" />
+            ))}
           </div>
         </nav>
       </main>
