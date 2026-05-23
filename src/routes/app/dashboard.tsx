@@ -24,8 +24,11 @@ function Dashboard() {
       <Card className="bg-card-gradient text-primary-foreground p-6 rounded-2xl shadow-elegant border-0">
         <div className="text-xs uppercase tracking-widest text-primary">Solde disponible</div>
         <div className="flex items-end justify-between mt-1">
-          <div className="text-3xl font-bold text-primary">
-            {hidden ? "•••••• XOF" : formatXOF(profile?.balance ?? 0)}
+          <div>
+            <div className="text-3xl font-bold text-primary">
+              {hidden ? "•••••• XOF" : formatXOF(profile?.balance ?? 0)}
+            </div>
+            {!hidden && <NairaHint amount={profile?.balance ?? 0} className="mt-1" />}
           </div>
           <button onClick={() => setHidden(!hidden)} className="opacity-80 hover:opacity-100">
             {hidden ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
