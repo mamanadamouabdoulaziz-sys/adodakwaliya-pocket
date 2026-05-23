@@ -72,7 +72,10 @@ function ProductsPage() {
                 <p className="text-xs text-muted-foreground mt-1">{p.description}</p>
               )}
               <div className="mt-3 flex items-center justify-between">
-                <div className="text-lg font-bold text-primary">{formatXOF(p.price)}</div>
+                <div>
+                  <div className="text-lg font-bold text-primary">{formatXOF(p.price)}</div>
+                  <NairaHint amount={p.price} />
+                </div>
                 <Badge variant={p.in_stock ? "secondary" : "outline"}>
                   {p.in_stock ? "Disponible" : "Rupture"}
                 </Badge>
