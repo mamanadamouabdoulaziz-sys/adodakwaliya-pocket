@@ -80,6 +80,7 @@ function OrderPage() {
       <Card className="p-4 mb-4 bg-card-gradient text-primary-foreground">
         <div className="text-xs uppercase tracking-widest opacity-90">Solde disponible</div>
         <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <NairaHint amount={profile?.balance ?? 0} className="mt-1 !text-emerald-200" />
       </Card>
 
       {done ? (
