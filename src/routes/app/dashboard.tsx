@@ -14,6 +14,10 @@ export const Route = createFileRoute("/app/dashboard")({ component: Dashboard })
 function Dashboard() {
   const { profile } = useAuth();
   const [hidden, setHidden] = useState(false);
+  const [nairaInput, setNairaInput] = useState("");
+  const nairaNum = parseFloat(nairaInput.replace(/[^\d.]/g, "")) || 0;
+  const xofConverted = nairaNum / XOF_TO_NGN;
+
 
   return (
     <AppShell>
