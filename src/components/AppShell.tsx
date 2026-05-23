@@ -28,7 +28,6 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
     { to: "/app/products", icon: Package, label: "Produits", color: "#34d399" },
     { to: "/app/wifi", icon: Wifi, label: "WIFI", color: "#3b82f6" },
     { to: "/app/adedeta", icon: Car, label: "ADEDETA", color: "#facc15" },
-    { to: "/app/notifications", icon: Bell, label: "Alertes", color: "#ef4444" },
   ];
 
   return (
@@ -42,6 +41,21 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/app/notifications">
+              <Button
+                size="sm"
+                variant="secondary"
+                className="gap-1"
+                style={{
+                  backgroundColor: location.pathname === "/app/notifications" ? "#ef444445" : undefined,
+                  boxShadow: "0 0 15px #ef444480",
+                  border: "1.5px solid #ef4444",
+                  color: "#ef4444",
+                }}
+              >
+                <Bell className="h-4 w-4" /> Alertes
+              </Button>
+            </Link>
             {isAdmin && (
               <Link to="/app/admin">
                 <Button size="sm" variant="secondary" className="gap-1">
@@ -59,17 +73,17 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
         {children}
         <nav className="mt-8 flex justify-center">
-          <div className="grid grid-cols-3 gap-4 bg-card/80 border border-border rounded-2xl px-6 py-5 shadow-lg backdrop-blur-sm">
+          <div className="grid grid-cols-3 grid-rows-2 gap-4 bg-card/80 border border-border rounded-2xl px-6 py-6 shadow-lg backdrop-blur-sm w-full">
             {navTabs.map(({ to, icon: Icon, label, color }) => {
               const active = location.pathname === to;
               return (
                 <Link
                   key={to}
                   to={to}
-                  className="flex flex-col items-center justify-center py-3 gap-2 transition-all duration-300 hover:scale-105"
+                  className="flex flex-col items-center justify-center py-6 gap-3 transition-all duration-300 hover:scale-105"
                 >
                   <div
-                    className={`p-4 rounded-2xl transition-all duration-300 ${
+                    className={`p-5 rounded-2xl transition-all duration-300 ${
                       active ? "scale-110" : "hover:bg-white/5"
                     }`}
                     style={{
@@ -79,23 +93,20 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                     }}
                   >
                     <Icon
-                      className="h-8 w-8 transition-colors"
-                      style={{ color: active ? color : color, filter: active ? `drop-shadow(0 0 8px ${color})` : `drop-shadow(0 0 4px ${color}60)` }}
+                      className="h-9 w-9 transition-colors"
+                      style={{ color, filter: active ? `drop-shadow(0 0 8px ${color})` : `drop-shadow(0 0 4px ${color}60)` }}
                     />
                   </div>
                   <span
                     className="text-sm font-bold transition-colors"
-                    style={{ color: active ? color : color, textShadow: active ? `0 0 12px ${color}AA` : `0 0 6px ${color}60` }}
+                    style={{ color, textShadow: active ? `0 0 12px ${color}AA` : `0 0 6px ${color}60` }}
                   >
                     {label}
                   </span>
                 </Link>
               );
             })}
-            {/* 3 placeholders vides pour compléter la grille 3×3 */}
-            {[1, 2, 3].map((i) => (
-              <div key={`empty-${i}`} className="py-3" />
-            ))}
+            <div />
           </div>
         </nav>
       </main>
