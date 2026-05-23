@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint, XOF_TO_NGN } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Send, History } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, Send, History, ArrowRightLeft } from "lucide-react";
 
 import sbnLogo from "@/assets/sbn-logo.png";
 
@@ -13,6 +14,10 @@ export const Route = createFileRoute("/app/dashboard")({ component: Dashboard })
 function Dashboard() {
   const { profile } = useAuth();
   const [hidden, setHidden] = useState(false);
+  const [nairaInput, setNairaInput] = useState("");
+  const nairaNum = parseFloat(nairaInput.replace(/[^\d.]/g, "")) || 0;
+  const xofConverted = nairaNum / XOF_TO_NGN;
+
 
   return (
     <AppShell>
@@ -60,6 +65,33 @@ function Dashboard() {
           </Button>
         </Link>
       </div>
+
+      <Card className="mt-4 p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/5">
+        <div className="flex items-center gap-2 mb-3">
+          <ArrowRightLeft className="h-4 w-4 text-emerald-500" />
+          <div className="text-sm font-semibold">Convertisseur Naira → FCFA</div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs text-muted-foreground">Montant en Naira (₦)</label>
+          <Input
+            type="text"
+            inputMode="decimal"
+            value={nairaInput}
+            onChange={(e) => setNairaInput(e.target.value)}
+            placeholder="Ex: 2530"
+            className="text-lg font-semibold"
+          />
+          <div className="flex items-center justify-between pt-2 border-t border-emerald-500/20">
+            <span className="text-xs text-muted-foreground">Équivalent en FCFA</span>
+            <span className="text-lg font-bold text-emerald-600">
+              {formatXOF(Math.round(xofConverted))}
+            </span>
+          </div>
+          <div className="text-[10px] text-muted-foreground text-right">
+            Taux : 1 XOF ≈ {XOF_TO_NGN} ₦
+          </div>
+        </div>
+      </Card>
 
     </AppShell>
   );
