@@ -66,6 +66,33 @@ function Dashboard() {
         </Link>
       </div>
 
+      <Card className="mt-4 p-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/5">
+        <div className="flex items-center gap-2 mb-3">
+          <ArrowRightLeft className="h-4 w-4 text-emerald-500" />
+          <div className="text-sm font-semibold">Convertisseur Naira → FCFA</div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs text-muted-foreground">Montant en Naira (₦)</label>
+          <Input
+            type="text"
+            inputMode="decimal"
+            value={nairaInput}
+            onChange={(e) => setNairaInput(e.target.value)}
+            placeholder="Ex: 2530"
+            className="text-lg font-semibold"
+          />
+          <div className="flex items-center justify-between pt-2 border-t border-emerald-500/20">
+            <span className="text-xs text-muted-foreground">Équivalent en FCFA</span>
+            <span className="text-lg font-bold text-emerald-600">
+              {formatXOF(Math.round(xofConverted))}
+            </span>
+          </div>
+          <div className="text-[10px] text-muted-foreground text-right">
+            Taux : 1 XOF ≈ {XOF_TO_NGN} ₦
+          </div>
+        </div>
+      </Card>
+
     </AppShell>
   );
 }
