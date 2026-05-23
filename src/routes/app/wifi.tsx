@@ -27,7 +27,7 @@ const PROVIDERS: Provider[] = [
   },
   {
     id: "uba",
-    name: "WIFI UBA",
+    name: "WIFI OUBA",
     color: "#10b981",
     plans: [
       { label: "8H", price: 100 },
