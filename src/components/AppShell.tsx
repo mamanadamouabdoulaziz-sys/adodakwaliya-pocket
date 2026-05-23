@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { Home, Send, History, Package, Bell, Shield, LogOut, Mail, ShoppingCart, Wifi, Car } from "lucide-react";
+import { Send, Package, Bell, Shield, LogOut, ShoppingCart, Wifi, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AppShell({ children, requireAdmin = false }: { children: ReactNode; requireAdmin?: boolean }) {
