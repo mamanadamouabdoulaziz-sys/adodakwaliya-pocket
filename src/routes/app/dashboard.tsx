@@ -1,17 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppShell, formatXOF } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowDownLeft, ArrowUpRight, Eye, EyeOff, Send, History } from "lucide-react";
+import { Eye, EyeOff, Send, History } from "lucide-react";
 
 import sbnLogo from "@/assets/sbn-logo.png";
 
 export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
-
-type Tx = { id: string; reference: string; type: string; amount: number; created_at: string; from_user: string | null; to_user: string | null; };
 
 function Dashboard() {
   const { profile, user } = useAuth();
