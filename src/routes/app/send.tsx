@@ -116,6 +116,7 @@ function SendPage() {
         <div className="space-y-2">
           <Label>Montant (XOF)</Label>
           <Input inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" />
+          <NairaHint amount={amountNum} />
         </div>
         <div className="space-y-2">
           <Label>Note (optionnel)</Label>
