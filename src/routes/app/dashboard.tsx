@@ -58,36 +58,6 @@ function Dashboard() {
         </Link>
       </div>
 
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold">Dernières transactions</h2>
-          <Link to="/app/history" className="text-sm text-accent hover:underline">Tout voir</Link>
-        </div>
-        <div className="space-y-2">
-          {recent.length === 0 && (
-            <div className="text-sm text-muted-foreground text-center py-8">Aucune transaction pour le moment.</div>
-          )}
-          {recent.map((tx) => {
-            const incoming = tx.to_user === user?.id;
-            return (
-              <Card key={tx.id} className="p-4 flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${incoming ? "bg-success/15 text-success" : "bg-accent/15 text-accent"}`}>
-                  {incoming ? <ArrowDownLeft className="h-5 w-5" /> : <ArrowUpRight className="h-5 w-5" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">
-                    {tx.type === "admin_to_user" ? "Recharge reçue" : "Envoi à l'administration"}
-                  </div>
-                  <div className="text-xs text-muted-foreground truncate">{tx.reference}</div>
-                </div>
-                <div className={`font-semibold ${incoming ? "text-success" : ""}`}>
-                  {incoming ? "+" : "-"}{formatXOF(tx.amount)}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
     </AppShell>
   );
 }
