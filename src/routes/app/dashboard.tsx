@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint, XOF_TO_NGN } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Send, History } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, Send, History, ArrowRightLeft } from "lucide-react";
 
 import sbnLogo from "@/assets/sbn-logo.png";
 
