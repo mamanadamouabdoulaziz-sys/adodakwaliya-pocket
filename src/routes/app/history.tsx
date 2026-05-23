@@ -32,10 +32,12 @@ function HistoryPage() {
         <Card className="p-3 bg-success/10 border-success/30">
           <div className="text-[11px] uppercase tracking-wider text-success flex items-center gap-1"><ArrowDownLeft className="h-3 w-3" /> Solde reçu</div>
           <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
+          <NairaHint amount={totalReceived} />
         </Card>
         <Card className="p-3 bg-accent/10 border-accent/30">
           <div className="text-[11px] uppercase tracking-wider text-accent flex items-center gap-1"><ArrowUpRight className="h-3 w-3" /> Solde envoyé</div>
           <div className="text-base font-bold text-accent mt-1 break-all">-{formatXOF(totalSent)}</div>
+          <NairaHint amount={totalSent} />
         </Card>
       </div>
       <Card className="p-3 mb-4 bg-secondary/40">
@@ -43,10 +45,12 @@ function HistoryPage() {
           <span className="text-muted-foreground">Variation nette (reçu − envoyé)</span>
           <span className={`font-bold break-all ${net >= 0 ? "text-success" : "text-accent"}`}>{net >= 0 ? "+" : ""}{formatXOF(net)}</span>
         </div>
+        <NairaHint amount={Math.abs(net)} className="text-right" />
         <div className="flex justify-between items-center text-sm mt-2 pt-2 border-t border-border">
           <span className="text-muted-foreground">Solde actuel</span>
           <span className="font-bold text-primary break-all">{formatXOF(profile?.balance ?? 0)}</span>
         </div>
+        <NairaHint amount={profile?.balance ?? 0} className="text-right" />
       </Card>
       {txs.length === 0 && (
         <Card className="p-8 text-center text-muted-foreground">Aucune transaction.</Card>
