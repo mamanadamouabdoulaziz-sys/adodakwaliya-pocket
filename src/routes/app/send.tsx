@@ -91,7 +91,9 @@ function SendPage() {
         <Card className="p-3 mb-4 border-dashed">
           <div className="text-xs text-muted-foreground mb-2">Aperçu après envoi</div>
           <div className="flex justify-between text-sm"><span>Montant à déduire</span><span className="font-semibold text-accent">-{formatXOF(amountNum)}</span></div>
+          <NairaHint amount={amountNum} className="text-right" />
           <div className="flex justify-between text-sm mt-1 pt-2 border-t border-border"><span>Nouveau solde</span><span className={`font-bold break-all ${newBalance < 0 ? "text-destructive" : "text-primary"}`}>{formatXOF(newBalance)}</span></div>
+          <NairaHint amount={newBalance} className="text-right" />
         </Card>
       )}
       <form onSubmit={submit} className="space-y-4">
