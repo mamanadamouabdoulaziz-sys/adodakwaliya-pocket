@@ -88,6 +88,7 @@ function WifiPage() {
       <Card className="p-4 mb-4 bg-card-gradient text-primary-foreground">
         <div className="text-xs uppercase tracking-widest opacity-90">Solde disponible</div>
         <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <div className="text-[11px] font-semibold text-emerald-200 mt-1">≈ {formatNGN(profile?.balance ?? 0)}</div>
       </Card>
 
       <div className="space-y-4">
