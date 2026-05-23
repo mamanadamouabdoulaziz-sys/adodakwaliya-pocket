@@ -11,15 +11,8 @@ import sbnLogo from "@/assets/sbn-logo.png";
 export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
 
 function Dashboard() {
-  const { profile, user } = useAuth();
+  const { profile } = useAuth();
   const [hidden, setHidden] = useState(false);
-  const [recent, setRecent] = useState<Tx[]>([]);
-
-  useEffect(() => {
-    if (!user) return;
-    supabase.from("transactions").select("*").order("created_at", { ascending: false }).limit(5)
-      .then(({ data }) => setRecent((data as Tx[]) ?? []));
-  }, [user]);
 
   return (
     <AppShell>
