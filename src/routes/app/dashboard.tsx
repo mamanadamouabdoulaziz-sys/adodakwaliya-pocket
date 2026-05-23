@@ -1,28 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppShell, formatXOF } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowDownLeft, ArrowUpRight, Eye, EyeOff, Send, History } from "lucide-react";
+import { Eye, EyeOff, Send, History } from "lucide-react";
 
 import sbnLogo from "@/assets/sbn-logo.png";
 
 export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
 
-type Tx = { id: string; reference: string; type: string; amount: number; created_at: string; from_user: string | null; to_user: string | null; };
-
 function Dashboard() {
-  const { profile, user } = useAuth();
+  const { profile } = useAuth();
   const [hidden, setHidden] = useState(false);
-  const [recent, setRecent] = useState<Tx[]>([]);
-
-  useEffect(() => {
-    if (!user) return;
-    supabase.from("transactions").select("*").order("created_at", { ascending: false }).limit(5)
-      .then(({ data }) => setRecent((data as Tx[]) ?? []));
-  }, [user]);
 
   return (
     <AppShell>
@@ -68,36 +58,6 @@ function Dashboard() {
         </Link>
       </div>
 
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold">Dernières transactions</h2>
-          <Link to="/app/history" className="text-sm text-accent hover:underline">Tout voir</Link>
-        </div>
-        <div className="space-y-2">
-          {recent.length === 0 && (
-            <div className="text-sm text-muted-foreground text-center py-8">Aucune transaction pour le moment.</div>
-          )}
-          {recent.map((tx) => {
-            const incoming = tx.to_user === user?.id;
-            return (
-              <Card key={tx.id} className="p-4 flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${incoming ? "bg-success/15 text-success" : "bg-accent/15 text-accent"}`}>
-                  {incoming ? <ArrowDownLeft className="h-5 w-5" /> : <ArrowUpRight className="h-5 w-5" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">
-                    {tx.type === "admin_to_user" ? "Recharge reçue" : "Envoi à l'administration"}
-                  </div>
-                  <div className="text-xs text-muted-foreground truncate">{tx.reference}</div>
-                </div>
-                <div className={`font-semibold ${incoming ? "text-success" : ""}`}>
-                  {incoming ? "+" : "-"}{formatXOF(tx.amount)}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
     </AppShell>
   );
 }
