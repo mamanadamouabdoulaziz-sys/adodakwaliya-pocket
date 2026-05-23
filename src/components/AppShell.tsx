@@ -41,6 +41,21 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/app/notifications">
+              <Button
+                size="sm"
+                variant="secondary"
+                className="gap-1"
+                style={{
+                  backgroundColor: location.pathname === "/app/notifications" ? "#ef444445" : undefined,
+                  boxShadow: "0 0 15px #ef444480",
+                  border: "1.5px solid #ef4444",
+                  color: "#ef4444",
+                }}
+              >
+                <Bell className="h-4 w-4" /> Alertes
+              </Button>
+            </Link>
             {isAdmin && (
               <Link to="/app/admin">
                 <Button size="sm" variant="secondary" className="gap-1">
