@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppWifiRouteImport } from './routes/app/wifi'
 import { Route as AppSendRouteImport } from './routes/app/send'
 import { Route as AppProductsRouteImport } from './routes/app/products'
 import { Route as AppOrderRouteImport } from './routes/app/order'
@@ -19,6 +20,7 @@ import { Route as AppHistoryRouteImport } from './routes/app/history'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppContactRouteImport } from './routes/app/contact'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
+import { Route as AppAdedetaRouteImport } from './routes/app/adedeta'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -28,6 +30,11 @@ const AuthRoute = AuthRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppWifiRoute = AppWifiRouteImport.update({
+  id: '/app/wifi',
+  path: '/app/wifi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppSendRoute = AppSendRouteImport.update({
@@ -70,10 +77,16 @@ const AppAdminRoute = AppAdminRouteImport.update({
   path: '/app/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppAdedetaRoute = AppAdedetaRouteImport.update({
+  id: '/app/adedeta',
+  path: '/app/adedeta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -82,10 +95,12 @@ export interface FileRoutesByFullPath {
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
+  '/app/wifi': typeof AppWifiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -94,11 +109,13 @@ export interface FileRoutesByTo {
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
+  '/app/wifi': typeof AppWifiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -107,12 +124,14 @@ export interface FileRoutesById {
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
   '/app/send': typeof AppSendRoute
+  '/app/wifi': typeof AppWifiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/app/adedeta'
     | '/app/admin'
     | '/app/contact'
     | '/app/dashboard'
@@ -121,10 +140,12 @@ export interface FileRouteTypes {
     | '/app/order'
     | '/app/products'
     | '/app/send'
+    | '/app/wifi'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/app/adedeta'
     | '/app/admin'
     | '/app/contact'
     | '/app/dashboard'
@@ -133,10 +154,12 @@ export interface FileRouteTypes {
     | '/app/order'
     | '/app/products'
     | '/app/send'
+    | '/app/wifi'
   id:
     | '__root__'
     | '/'
     | '/auth'
+    | '/app/adedeta'
     | '/app/admin'
     | '/app/contact'
     | '/app/dashboard'
@@ -145,11 +168,13 @@ export interface FileRouteTypes {
     | '/app/order'
     | '/app/products'
     | '/app/send'
+    | '/app/wifi'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  AppAdedetaRoute: typeof AppAdedetaRoute
   AppAdminRoute: typeof AppAdminRoute
   AppContactRoute: typeof AppContactRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -158,6 +183,7 @@ export interface RootRouteChildren {
   AppOrderRoute: typeof AppOrderRoute
   AppProductsRoute: typeof AppProductsRoute
   AppSendRoute: typeof AppSendRoute
+  AppWifiRoute: typeof AppWifiRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -174,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/wifi': {
+      id: '/app/wifi'
+      path: '/app/wifi'
+      fullPath: '/app/wifi'
+      preLoaderRoute: typeof AppWifiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/send': {
@@ -232,12 +265,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/adedeta': {
+      id: '/app/adedeta'
+      path: '/app/adedeta'
+      fullPath: '/app/adedeta'
+      preLoaderRoute: typeof AppAdedetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  AppAdedetaRoute: AppAdedetaRoute,
   AppAdminRoute: AppAdminRoute,
   AppContactRoute: AppContactRoute,
   AppDashboardRoute: AppDashboardRoute,
@@ -246,7 +287,18 @@ const rootRouteChildren: RootRouteChildren = {
   AppOrderRoute: AppOrderRoute,
   AppProductsRoute: AppProductsRoute,
   AppSendRoute: AppSendRoute,
+  AppWifiRoute: AppWifiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
