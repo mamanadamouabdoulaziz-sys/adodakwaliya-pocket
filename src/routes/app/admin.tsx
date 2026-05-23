@@ -136,6 +136,7 @@ function AdminPage() {
                   {r.products && (
                     <div className="text-xs mt-1">
                       Total estimé : <span className="font-semibold">{formatXOF(r.products.price * r.quantity)}</span>
+                      <NairaHint amount={r.products.price * r.quantity} />
                     </div>
                   )}
                 </div>
