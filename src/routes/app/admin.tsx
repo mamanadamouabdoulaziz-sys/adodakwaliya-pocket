@@ -89,6 +89,7 @@ function AdminPage() {
                 <div className="text-xs text-muted-foreground">{u.phone}</div>
                 <div className="text-xs font-mono mt-1">{u.account_number}</div>
                 <div className="text-sm mt-1">Solde : <span className="font-semibold">{formatXOF(u.balance)}</span></div>
+                <NairaHint amount={u.balance} />
               </div>
               <div className="flex flex-col gap-2 items-end">
                 <Badge variant={u.suspended ? "destructive" : "secondary"}>
