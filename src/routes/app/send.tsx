@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { AppShell, formatXOF } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -72,23 +72,28 @@ function SendPage() {
       <Card className="p-4 mb-3 bg-secondary/50">
         <div className="text-sm text-muted-foreground">Solde disponible</div>
         <div className="text-2xl font-bold break-all">{formatXOF(profile?.balance ?? 0)}</div>
+        <NairaHint amount={profile?.balance ?? 0} className="mt-0.5" />
         <div className="text-xs text-muted-foreground mt-1">Aucun frais — transfert gratuit.</div>
       </Card>
       <div className="grid grid-cols-2 gap-3 mb-3">
         <Card className="p-3 bg-success/10 border-success/30">
           <div className="text-[11px] uppercase tracking-wider text-success">Solde reçu</div>
           <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
+          <NairaHint amount={totalReceived} />
         </Card>
         <Card className="p-3 bg-accent/10 border-accent/30">
           <div className="text-[11px] uppercase tracking-wider text-accent">Solde envoyé</div>
           <div className="text-base font-bold text-accent mt-1 break-all">-{formatXOF(totalSent)}</div>
+          <NairaHint amount={totalSent} />
         </Card>
       </div>
       {amountNum > 0 && (
         <Card className="p-3 mb-4 border-dashed">
           <div className="text-xs text-muted-foreground mb-2">Aperçu après envoi</div>
           <div className="flex justify-between text-sm"><span>Montant à déduire</span><span className="font-semibold text-accent">-{formatXOF(amountNum)}</span></div>
+          <NairaHint amount={amountNum} className="text-right" />
           <div className="flex justify-between text-sm mt-1 pt-2 border-t border-border"><span>Nouveau solde</span><span className={`font-bold break-all ${newBalance < 0 ? "text-destructive" : "text-primary"}`}>{formatXOF(newBalance)}</span></div>
+          <NairaHint amount={newBalance} className="text-right" />
         </Card>
       )}
       <form onSubmit={submit} className="space-y-4">
@@ -111,6 +116,7 @@ function SendPage() {
         <div className="space-y-2">
           <Label>Montant (XOF)</Label>
           <Input inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" />
+          <NairaHint amount={amountNum} />
         </div>
         <div className="space-y-2">
           <Label>Note (optionnel)</Label>

@@ -117,3 +117,18 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
 export function formatXOF(n: number) {
   return new Intl.NumberFormat("fr-FR").format(Math.round(n)) + " XOF";
 }
+
+// Taux indicatif XOF -> NGN (1 XOF ≈ 2.53 NGN)
+export const XOF_TO_NGN = 2.53;
+
+export function formatNGN(n: number) {
+  return "₦ " + new Intl.NumberFormat("fr-FR").format(Math.round((n || 0) * XOF_TO_NGN));
+}
+
+export function NairaHint({ amount, className = "" }: { amount: number; className?: string }) {
+  return (
+    <div className={`text-[11px] font-semibold text-emerald-500/90 leading-tight ${className}`}>
+      ≈ {formatNGN(amount)}
+    </div>
+  );
+}

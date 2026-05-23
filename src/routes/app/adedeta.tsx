@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { AppShell, formatXOF } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint, formatNGN } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -54,6 +54,7 @@ function AdedetaPage() {
       <Card className="p-4 mb-4 bg-card-gradient text-primary-foreground">
         <div className="text-xs uppercase tracking-widest opacity-90">Solde disponible</div>
         <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <div className="text-[11px] font-semibold text-emerald-200 mt-1">≈ {formatNGN(profile?.balance ?? 0)}</div>
       </Card>
 
       <Card className="p-4">
@@ -69,6 +70,7 @@ function AdedetaPage() {
           <div className="space-y-2">
             <Label>Montant (XOF)</Label>
             <Input inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" required />
+            <NairaHint amount={Number(amount) || 0} />
           </div>
           <div className="space-y-2">
             <Label>Note (facultatif)</Label>

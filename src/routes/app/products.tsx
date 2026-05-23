@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { AppShell, formatXOF } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -72,7 +72,10 @@ function ProductsPage() {
                 <p className="text-xs text-muted-foreground mt-1">{p.description}</p>
               )}
               <div className="mt-3 flex items-center justify-between">
-                <div className="text-lg font-bold text-primary">{formatXOF(p.price)}</div>
+                <div>
+                  <div className="text-lg font-bold text-primary">{formatXOF(p.price)}</div>
+                  <NairaHint amount={p.price} />
+                </div>
                 <Badge variant={p.in_stock ? "secondary" : "outline"}>
                   {p.in_stock ? "Disponible" : "Rupture"}
                 </Badge>
@@ -170,6 +173,7 @@ function RequestDialog({ product, userId }: { product: Product; userId: string |
               </div>
               <div className="text-sm text-muted-foreground">
                 Prix unitaire : <span className="font-semibold">{formatXOF(product.price)}</span>
+                <NairaHint amount={product.price * (Number(qty) || 1)} />
               </div>
             </div>
             <DialogFooter>

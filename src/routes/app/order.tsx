@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { AppShell, formatXOF } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -80,6 +80,7 @@ function OrderPage() {
       <Card className="p-4 mb-4 bg-card-gradient text-primary-foreground">
         <div className="text-xs uppercase tracking-widest opacity-90">Solde disponible</div>
         <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <NairaHint amount={profile?.balance ?? 0} className="mt-1 !text-emerald-200" />
       </Card>
 
       {done ? (
@@ -154,6 +155,7 @@ function OrderPage() {
               <span className="text-muted-foreground">Prix unitaire</span>
               <span className="font-medium">{formatXOF(product?.price ?? 0)}</span>
             </div>
+            <NairaHint amount={product?.price ?? 0} className="text-right" />
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Quantité</span>
               <span className="font-medium">{qty}</span>
@@ -162,6 +164,7 @@ function OrderPage() {
               <span className="font-semibold">Total à payer</span>
               <span className="text-lg font-bold text-primary">{formatXOF(total)}</span>
             </div>
+            <NairaHint amount={total} className="text-right" />
             {insufficient && (
               <p className="text-xs text-destructive pt-2">
                 Solde insuffisant. Rechargez votre compte avant d'envoyer la commande.

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { AppShell, formatXOF } from "@/components/AppShell";
+import { AppShell, formatXOF, NairaHint, formatNGN } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
@@ -88,6 +88,7 @@ function WifiPage() {
       <Card className="p-4 mb-4 bg-card-gradient text-primary-foreground">
         <div className="text-xs uppercase tracking-widest opacity-90">Solde disponible</div>
         <div className="text-2xl font-bold">{formatXOF(profile?.balance ?? 0)}</div>
+        <div className="text-[11px] font-semibold text-emerald-200 mt-1">≈ {formatNGN(profile?.balance ?? 0)}</div>
       </Card>
 
       <div className="space-y-4">
@@ -117,6 +118,7 @@ function WifiPage() {
                   >
                     <span className="text-xs text-muted-foreground">{pl.label}</span>
                     <span className="font-bold" style={{ color: p.color }}>{formatXOF(pl.price)}</span>
+                    <NairaHint amount={pl.price} />
                     {busy ? <span className="text-xs">Envoi…</span> : <Check className="h-3 w-3 opacity-60" />}
                   </Button>
                 );
