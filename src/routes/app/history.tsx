@@ -27,8 +27,8 @@ function HistoryPage() {
 
   return (
     <AppShell>
-      <h1 className="text-xl font-bold mb-4">Historique des transactions</h1>
       <div className="grid grid-cols-2 gap-3 mb-4">
+
         <Card className="p-3 bg-success/10 border-success/30">
           <div className="text-[11px] uppercase tracking-wider text-success flex items-center gap-1"><ArrowDownLeft className="h-3 w-3" /> Solde reçu</div>
           <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
