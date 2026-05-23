@@ -72,16 +72,19 @@ function SendPage() {
       <Card className="p-4 mb-3 bg-secondary/50">
         <div className="text-sm text-muted-foreground">Solde disponible</div>
         <div className="text-2xl font-bold break-all">{formatXOF(profile?.balance ?? 0)}</div>
+        <NairaHint amount={profile?.balance ?? 0} className="mt-0.5" />
         <div className="text-xs text-muted-foreground mt-1">Aucun frais — transfert gratuit.</div>
       </Card>
       <div className="grid grid-cols-2 gap-3 mb-3">
         <Card className="p-3 bg-success/10 border-success/30">
           <div className="text-[11px] uppercase tracking-wider text-success">Solde reçu</div>
           <div className="text-base font-bold text-success mt-1 break-all">+{formatXOF(totalReceived)}</div>
+          <NairaHint amount={totalReceived} />
         </Card>
         <Card className="p-3 bg-accent/10 border-accent/30">
           <div className="text-[11px] uppercase tracking-wider text-accent">Solde envoyé</div>
           <div className="text-base font-bold text-accent mt-1 break-all">-{formatXOF(totalSent)}</div>
+          <NairaHint amount={totalSent} />
         </Card>
       </div>
       {amountNum > 0 && (
