@@ -79,6 +79,7 @@ function HistoryPage() {
                   <div className={`font-bold ${incoming ? "text-success" : ""}`}>
                     {incoming ? "+" : "-"}{formatXOF(tx.amount)}
                   </div>
+                  <NairaHint amount={tx.amount} />
                   <Badge variant={tx.status === "completed" ? "secondary" : "destructive"} className="mt-1 text-[10px]">
                     {tx.status === "completed" ? "Succès" : tx.status}
                   </Badge>
