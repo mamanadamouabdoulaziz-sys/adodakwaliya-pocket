@@ -54,52 +54,9 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
             </Button>
           </div>
         </div>
-      </header>
-
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 pb-36">{children}</main>
-
-      <nav className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur-md border-t border-border z-30 pb-safe">
-        <div className="max-w-3xl mx-auto flex flex-col">
-          {/* Ligne 1 : Contact, Envoyer, Alertes */}
-          <div className="grid grid-cols-5 border-b border-border/50">
-            <div className="col-span-1" />
-            {bottomTabs.map(({ to, icon: Icon, label, color }) => {
-              const active = location.pathname === to;
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  className="flex flex-col items-center py-2 gap-1 transition-all duration-200 col-span-1"
-                >
-                  <div
-                    className={`p-1.5 rounded-xl transition-all duration-200 ${
-                      active ? "scale-110 shadow-lg" : "opacity-70 hover:opacity-100"
-                    }`}
-                    style={{
-                      backgroundColor: active ? `${color}30` : "transparent",
-                      boxShadow: active ? `0 0 12px ${color}60` : "none",
-                    }}
-                  >
-                    <Icon
-                      className="h-5 w-5 transition-colors"
-                      style={{ color: active ? color : "#9ca3af" }}
-                    />
-                  </div>
-                  <span
-                    className="text-[10px] font-medium transition-colors"
-                    style={{ color: active ? color : "#9ca3af" }}
-                  >
-                    {label}
-                  </span>
-                </Link>
-              );
-            })}
-            <div className="col-span-1" />
-          </div>
-
-          {/* Ligne 2 : Accueil, Commande, Historique, Produits */}
-          <div className="grid grid-cols-4">
-            {topTabs.map(({ to, icon: Icon, label, color }) => {
+        <nav className="border-t border-white/10 bg-black/10">
+          <div className="max-w-3xl mx-auto grid grid-cols-6">
+            {navTabs.map(({ to, icon: Icon, label, color }) => {
               const active = location.pathname === to;
               return (
                 <Link
@@ -109,7 +66,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                 >
                   <div
                     className={`p-1.5 rounded-xl transition-all duration-200 ${
-                      active ? "scale-110 shadow-lg" : "opacity-70 hover:opacity-100"
+                      active ? "scale-110 shadow-lg" : "opacity-80 hover:opacity-100"
                     }`}
                     style={{
                       backgroundColor: active ? `${color}30` : "transparent",
@@ -118,12 +75,12 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                   >
                     <Icon
                       className="h-5 w-5 transition-colors"
-                      style={{ color: active ? color : "#9ca3af" }}
+                      style={{ color: active ? color : "#e5e7eb" }}
                     />
                   </div>
                   <span
                     className="text-[10px] font-medium transition-colors"
-                    style={{ color: active ? color : "#9ca3af" }}
+                    style={{ color: active ? color : "#e5e7eb" }}
                   >
                     {label}
                   </span>
@@ -131,8 +88,10 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
               );
             })}
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
+
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">{children}</main>
     </div>
   );
 }
