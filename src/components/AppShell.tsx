@@ -64,43 +64,8 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
 
       <nav className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur-md border-t border-border z-30 pb-safe">
         <div className="max-w-3xl mx-auto flex flex-col">
-          {/* Ligne 1 */}
-          <div className="grid grid-cols-4 border-b border-border/50">
-            {topTabs.map(({ to, icon: Icon, label, color }) => {
-              const active = location.pathname === to;
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  className="flex flex-col items-center py-2 gap-1 transition-all duration-200"
-                >
-                  <div
-                    className={`p-1.5 rounded-xl transition-all duration-200 ${
-                      active ? "scale-110 shadow-lg" : "opacity-70 hover:opacity-100"
-                    }`}
-                    style={{
-                      backgroundColor: active ? `${color}30` : "transparent",
-                      boxShadow: active ? `0 0 12px ${color}60` : "none",
-                    }}
-                  >
-                    <Icon
-                      className="h-5 w-5 transition-colors"
-                      style={{ color: active ? color : "#9ca3af" }}
-                    />
-                  </div>
-                  <span
-                    className="text-[10px] font-medium transition-colors"
-                    style={{ color: active ? color : "#9ca3af" }}
-                  >
-                    {label}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Ligne 2 */}
-          <div className="grid grid-cols-5">
+          {/* Ligne 1 : Contact, Envoyer, Alertes */}
+          <div className="grid grid-cols-5 border-b border-border/50">
             <div className="col-span-1" />
             {bottomTabs.map(({ to, icon: Icon, label, color, highlight }) => {
               const active = location.pathname === to;
@@ -109,7 +74,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                 <Link
                   key={to}
                   to={to}
-                  className={`flex flex-col items-center py-1.5 gap-0.5 transition-all duration-200 ${isSend ? "col-span-1" : "col-span-1"}`}
+                  className="flex flex-col items-center py-1.5 gap-0.5 transition-all duration-200 col-span-1"
                 >
                   <div
                     className={`rounded-xl transition-all duration-200 flex items-center justify-center ${
@@ -141,7 +106,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                     />
                   </div>
                   <span
-                    className="text-[10px] font-medium transition-colors"
+                    className="font-medium transition-colors"
                     style={{
                       color: active ? color : isSend ? color : "#9ca3af",
                       fontSize: isSend ? "9px" : "10px",
@@ -153,6 +118,41 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
               );
             })}
             <div className="col-span-1" />
+          </div>
+
+          {/* Ligne 2 : Accueil, Commande, Historique, Produits */}
+          <div className="grid grid-cols-4">
+            {topTabs.map(({ to, icon: Icon, label, color }) => {
+              const active = location.pathname === to;
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className="flex flex-col items-center py-2 gap-1 transition-all duration-200"
+                >
+                  <div
+                    className={`p-1.5 rounded-xl transition-all duration-200 ${
+                      active ? "scale-110 shadow-lg" : "opacity-70 hover:opacity-100"
+                    }`}
+                    style={{
+                      backgroundColor: active ? `${color}30` : "transparent",
+                      boxShadow: active ? `0 0 12px ${color}60` : "none",
+                    }}
+                  >
+                    <Icon
+                      className="h-5 w-5 transition-colors"
+                      style={{ color: active ? color : "#9ca3af" }}
+                    />
+                  </div>
+                  <span
+                    className="text-[10px] font-medium transition-colors"
+                    style={{ color: active ? color : "#9ca3af" }}
+                  >
+                    {label}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </nav>
