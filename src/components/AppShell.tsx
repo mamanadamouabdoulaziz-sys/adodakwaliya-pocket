@@ -28,7 +28,6 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
     { to: "/app/products", icon: Package, label: "Produits", color: "#34d399" },
     { to: "/app/wifi", icon: Wifi, label: "WIFI", color: "#3b82f6" },
     { to: "/app/adedeta", icon: Car, label: "ADEDETA", color: "#facc15" },
-    { to: "/app/notifications", icon: Bell, label: "Alertes", color: "#ef4444" },
   ];
 
   return (
