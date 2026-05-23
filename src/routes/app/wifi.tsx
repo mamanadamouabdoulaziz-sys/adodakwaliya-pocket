@@ -118,6 +118,7 @@ function WifiPage() {
                   >
                     <span className="text-xs text-muted-foreground">{pl.label}</span>
                     <span className="font-bold" style={{ color: p.color }}>{formatXOF(pl.price)}</span>
+                    <NairaHint amount={pl.price} />
                     {busy ? <span className="text-xs">Envoi…</span> : <Check className="h-3 w-3 opacity-60" />}
                   </Button>
                 );
