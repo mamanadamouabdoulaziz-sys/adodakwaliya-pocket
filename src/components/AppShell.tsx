@@ -107,7 +107,6 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
                 </Link>
               );
             })}
-            <div />
           </div>
         </nav>
       </main>
