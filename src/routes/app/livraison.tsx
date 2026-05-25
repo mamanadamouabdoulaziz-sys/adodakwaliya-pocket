@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppShell, formatXOF, NairaHint } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,65 +7,98 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Utensils, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Utensils, Minus, Plus, ShoppingBag, Pencil, Check, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/livraison")({ component: LivraisonPage });
 
-type Dish = { id: string; name: string; desc: string; price: number; emoji: string };
+type Dish = { id: string; name: string; desc: string; price: number };
 
-const CATEGORIES: { title: string; color: string; dishes: Dish[] }[] = [
+const DEFAULT_CATEGORIES: { title: string; color: string; dishes: Dish[] }[] = [
   {
     title: "Riz & Sauces",
     color: "#fb923c",
     dishes: [
-      { id: "jollof", name: "Jollof Rice", desc: "Riz épicé à la tomate, style nigérian", price: 1500, emoji: "🍛" },
-      { id: "fried-rice", name: "Fried Rice", desc: "Riz sauté aux légumes et crevettes", price: 1800, emoji: "🍚" },
-      { id: "ofada", name: "Ofada Rice + Ayamase", desc: "Riz local & sauce piment vert", price: 2000, emoji: "🌶️" },
-      { id: "coconut-rice", name: "Coconut Rice", desc: "Riz au lait de coco", price: 1700, emoji: "🥥" },
+      { id: "jollof", name: "Jollof Rice", desc: "Riz épicé à la tomate, style nigérian", price: 1500 },
+      { id: "fried-rice", name: "Fried Rice", desc: "Riz sauté aux légumes et crevettes", price: 1800 },
+      { id: "ofada", name: "Ofada Rice + Ayamase", desc: "Riz local & sauce piment vert", price: 2000 },
+      { id: "coconut-rice", name: "Coconut Rice", desc: "Riz au lait de coco", price: 1700 },
     ],
   },
   {
     title: "Viandes & Grillades",
     color: "#ef4444",
     dishes: [
-      { id: "suya", name: "Suya (Brochette de bœuf)", desc: "Bœuf épicé grillé, yaji", price: 1000, emoji: "🍢" },
-      { id: "asun", name: "Asun (Chèvre pimentée)", desc: "Chèvre grillée façon Yoruba", price: 2500, emoji: "🐐" },
-      { id: "peppered-chicken", name: "Peppered Chicken", desc: "Poulet frit aux poivrons", price: 2200, emoji: "🍗" },
-      { id: "goat-meat", name: "Goat Meat Pepper Soup", desc: "Soupe pimentée à la chèvre", price: 2800, emoji: "🍲" },
+      { id: "suya", name: "Suya (Brochette de bœuf)", desc: "Bœuf épicé grillé, yaji", price: 1000 },
+      { id: "asun", name: "Asun (Chèvre pimentée)", desc: "Chèvre grillée façon Yoruba", price: 2500 },
+      { id: "peppered-chicken", name: "Peppered Chicken", desc: "Poulet frit aux poivrons", price: 2200 },
+      { id: "goat-meat", name: "Goat Meat Pepper Soup", desc: "Soupe pimentée à la chèvre", price: 2800 },
     ],
   },
   {
     title: "Soupes & Swallows",
     color: "#10b981",
     dishes: [
-      { id: "egusi", name: "Egusi + Pounded Yam", desc: "Soupe de melon & igname pilée", price: 2500, emoji: "🥣" },
-      { id: "okra", name: "Okra Soup + Eba", desc: "Gombo & semoule de manioc", price: 2000, emoji: "🌿" },
-      { id: "afang", name: "Afang Soup + Fufu", desc: "Soupe de légumes, style Calabar", price: 2700, emoji: "🥬" },
-      { id: "banga", name: "Banga Soup + Starch", desc: "Soupe de palme, style Delta", price: 2600, emoji: "🌴" },
+      { id: "egusi", name: "Egusi + Pounded Yam", desc: "Soupe de melon & igname pilée", price: 2500 },
+      { id: "okra", name: "Okra Soup + Eba", desc: "Gombo & semoule de manioc", price: 2000 },
+      { id: "afang", name: "Afang Soup + Fufu", desc: "Soupe de légumes, style Calabar", price: 2700 },
+      { id: "banga", name: "Banga Soup + Starch", desc: "Soupe de palme, style Delta", price: 2600 },
     ],
   },
   {
     title: "Snacks & Boissons",
     color: "#8b5cf6",
     dishes: [
-      { id: "puff-puff", name: "Puff Puff (×5)", desc: "Beignets sucrés nigérians", price: 500, emoji: "🍩" },
-      { id: "meat-pie", name: "Meat Pie", desc: "Chausson à la viande", price: 700, emoji: "🥟" },
-      { id: "chin-chin", name: "Chin Chin", desc: "Biscuits croustillants", price: 600, emoji: "🍪" },
-      { id: "zobo", name: "Zobo (1L)", desc: "Boisson à l'hibiscus", price: 800, emoji: "🥤" },
+      { id: "puff-puff", name: "Puff Puff (x5)", desc: "Beignets sucrés nigérians", price: 500 },
+      { id: "meat-pie", name: "Meat Pie", desc: "Chausson à la viande", price: 700 },
+      { id: "chin-chin", name: "Chin Chin", desc: "Biscuits croustillants", price: 600 },
+      { id: "zobo", name: "Zobo (1L)", desc: "Boisson à l'hibiscus", price: 800 },
     ],
   },
 ];
 
+const STORAGE_KEY = "livraison-overrides-v1";
+type Overrides = Record<string, { name?: string; price?: number }>;
+
+function loadOverrides(): Overrides {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
 function LivraisonPage() {
-  const { user, profile, refresh } = useAuth();
+  const { user, profile, isAdmin, refresh } = useAuth();
   const [cart, setCart] = useState<Record<string, number>>({});
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState(profile?.phone ?? "");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [overrides, setOverrides] = useState<Overrides>({});
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editPrice, setEditPrice] = useState("");
 
-  const allDishes = useMemo(() => CATEGORIES.flatMap((c) => c.dishes), []);
+  useEffect(() => {
+    setOverrides(loadOverrides());
+  }, []);
+
+  const categories = useMemo(
+    () =>
+      DEFAULT_CATEGORIES.map((c) => ({
+        ...c,
+        dishes: c.dishes.map((d) => ({
+          ...d,
+          name: overrides[d.id]?.name ?? d.name,
+          price: overrides[d.id]?.price ?? d.price,
+        })),
+      })),
+    [overrides]
+  );
+  const allDishes = useMemo(() => categories.flatMap((c) => c.dishes), [categories]);
+
   const total = useMemo(
     () => Object.entries(cart).reduce((s, [id, q]) => s + (allDishes.find((d) => d.id === id)?.price ?? 0) * q, 0),
     [cart, allDishes]
@@ -80,6 +113,31 @@ function LivraisonPage() {
     });
   };
 
+  const startEdit = (d: Dish) => {
+    setEditingId(d.id);
+    setEditName(d.name);
+    setEditPrice(String(d.price));
+  };
+
+  const saveEdit = (id: string) => {
+    const name = editName.trim().slice(0, 80);
+    const price = Math.max(0, Math.round(parseFloat(editPrice.replace(/[^\d.]/g, "")) || 0));
+    if (!name) return toast.error("Nom requis");
+    const next: Overrides = { ...overrides, [id]: { name, price } };
+    setOverrides(next);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+    setEditingId(null);
+    toast.success("Repas mis à jour");
+  };
+
+  const resetEdit = (id: string) => {
+    const next = { ...overrides };
+    delete next[id];
+    setOverrides(next);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+    setEditingId(null);
+  };
+
   const submit = async () => {
     if (!user) return;
     if (Object.keys(cart).length === 0) return toast.error("Panier vide");
@@ -88,11 +146,13 @@ function LivraisonPage() {
 
     setLoading(true);
     try {
-      const items = Object.entries(cart).map(([id, q]) => {
-        const d = allDishes.find((x) => x.id === id)!;
-        return `${d.name} ×${q}`;
-      }).join(", ");
-      const subject = `Livraison repas — ${formatXOF(total)}`;
+      const items = Object.entries(cart)
+        .map(([id, q]) => {
+          const d = allDishes.find((x) => x.id === id)!;
+          return `${d.name} x${q}`;
+        })
+        .join(", ");
+      const subject = `Livraison repas - ${formatXOF(total)}`;
       const message = `Commande: ${items}\nTotal: ${formatXOF(total)}\nAdresse: ${address}\nTéléphone: ${phone}\nNote: ${note || "—"}`;
       const { error } = await supabase.from("contact_messages").insert({
         user_id: user.id,
@@ -124,30 +184,70 @@ function LivraisonPage() {
         </div>
       </div>
 
-      {CATEGORIES.map((cat) => (
+      {categories.map((cat) => (
         <div key={cat.title} className="mt-4">
           <div className="text-sm font-bold mb-2" style={{ color: cat.color }}>{cat.title}</div>
           <div className="grid gap-2">
             {cat.dishes.map((d) => {
               const qty = cart[d.id] ?? 0;
+              const editing = editingId === d.id;
               return (
                 <Card key={d.id} className="p-3 flex items-center gap-3" style={{ borderColor: qty > 0 ? cat.color : undefined }}>
-                  <div className="text-3xl">{d.emoji}</div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-sm">{d.name}</div>
-                    <div className="text-[11px] text-muted-foreground truncate">{d.desc}</div>
-                    <div className="text-sm font-bold mt-1" style={{ color: cat.color }}>{formatXOF(d.price)}</div>
-                    <NairaHint amount={d.price} />
+                    {editing ? (
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-[10px] text-muted-foreground">Nom du repas</label>
+                          <Input value={editName} onChange={(e) => setEditName(e.target.value)} maxLength={80} className="h-8 text-sm" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted-foreground">Prix (XOF)</label>
+                          <Input
+                            value={editPrice}
+                            onChange={(e) => setEditPrice(e.target.value)}
+                            inputMode="numeric"
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="flex gap-1">
+                          <Button size="sm" onClick={() => saveEdit(d.id)} className="h-7 gap-1">
+                            <Check className="h-3 w-3" /> Sauver
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setEditingId(null)} className="h-7 gap-1">
+                            <X className="h-3 w-3" /> Annuler
+                          </Button>
+                          {overrides[d.id] && (
+                            <Button size="sm" variant="ghost" onClick={() => resetEdit(d.id)} className="h-7 text-xs">
+                              Réinitialiser
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-semibold text-sm">{d.name}</div>
+                        <div className="text-[11px] text-muted-foreground truncate">{d.desc}</div>
+                        <div className="text-sm font-bold mt-1" style={{ color: cat.color }}>{formatXOF(d.price)}</div>
+                        <NairaHint amount={d.price} />
+                      </>
+                    )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => setQty(d.id, qty - 1)} disabled={qty === 0}>
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                    <span className="w-6 text-center text-sm font-bold">{qty}</span>
-                    <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => setQty(d.id, qty + 1)}>
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </div>
+                  {!editing && (
+                    <div className="flex items-center gap-1">
+                      {isAdmin && (
+                        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => startEdit(d)}>
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      )}
+                      <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => setQty(d.id, qty - 1)} disabled={qty === 0}>
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                      <span className="w-6 text-center text-sm font-bold">{qty}</span>
+                      <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => setQty(d.id, qty + 1)}>
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
                 </Card>
               );
             })}
