@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { Send, Package, Bell, Shield, LogOut, ShoppingCart, Wifi, Car, Home } from "lucide-react";
+import { Send, Package, Bell, Shield, LogOut, ShoppingCart, Wifi, Car, Home, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AppShell({ children, requireAdmin = false }: { children: ReactNode; requireAdmin?: boolean }) {
@@ -29,6 +29,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
     { to: "/app/products", icon: Package, label: "Produits", color: "#34d399" },
     { to: "/app/wifi", icon: Wifi, label: "WIFI", color: "#8b5cf6" },
     { to: "/app/adedeta", icon: Car, label: "ADEDETA", color: "#facc15" },
+    { to: "/app/livraison", icon: Utensils, label: "Livraison", color: "#f97316" },
   ];
 
   return (
@@ -74,7 +75,7 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
         {children}
         <nav className="mt-8 flex justify-center">
-          <div className="grid grid-cols-3 grid-rows-2 gap-4 bg-card/80 border border-border rounded-2xl px-6 py-6 shadow-lg backdrop-blur-sm w-full">
+          <div className="grid grid-cols-3 gap-4 bg-card/80 border border-border rounded-2xl px-6 py-6 shadow-lg backdrop-blur-sm w-full">
             {navTabs.map(({ to, icon: Icon, label, color }) => {
               const active = location.pathname === to;
               return (
