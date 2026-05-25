@@ -1,22 +1,31 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell, formatXOF, NairaHint, XOF_TO_NGN } from "@/components/AppShell";
 import { useAuth } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Send, History, ArrowRightLeft } from "lucide-react";
+import { Eye, EyeOff, Send, History, ArrowRightLeft, Phone } from "lucide-react";
+import { getAdminContacts } from "@/lib/admins.functions";
 
 import sbnLogo from "@/assets/sbn-logo.png";
 
 export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
 
 function Dashboard() {
-  const { profile } = useAuth();
+  const { profile, isAdmin } = useAuth();
   const [hidden, setHidden] = useState(false);
   const [nairaInput, setNairaInput] = useState("");
   const nairaNum = parseFloat(nairaInput.replace(/[^\d.]/g, "")) || 0;
   const xofConverted = nairaNum / XOF_TO_NGN;
+
+  const { data: adminData } = useQuery({
+    queryKey: ["admin-contacts"],
+    queryFn: () => getAdminContacts(),
+    enabled: !isAdmin,
+  });
+
 
 
   return (
@@ -51,6 +60,25 @@ function Dashboard() {
             </div>
           </div>
         </div>
+        {!isAdmin && adminData?.admins && adminData.admins.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-primary/20">
+            <div className="text-xs uppercase tracking-widest text-primary mb-2 flex items-center gap-1">
+              <Phone className="h-3 w-3" /> Contact Administrateurs
+            </div>
+            <div className="space-y-1">
+              {adminData.admins.map((a, i) => (
+                <a
+                  key={i}
+                  href={`tel:${a.phone}`}
+                  className="flex items-center justify-between text-sm hover:opacity-80"
+                >
+                  <span className="text-primary/80">{a.first_name} {a.last_name}</span>
+                  <span className="font-mono font-semibold text-primary">{a.phone}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </Card>
 
       <div className="grid grid-cols-2 gap-3 mt-4">
