@@ -16,6 +16,7 @@ import { Route as AppSendRouteImport } from './routes/app/send'
 import { Route as AppProductsRouteImport } from './routes/app/products'
 import { Route as AppOrderRouteImport } from './routes/app/order'
 import { Route as AppNotificationsRouteImport } from './routes/app/notifications'
+import { Route as AppLivraisonRouteImport } from './routes/app/livraison'
 import { Route as AppHistoryRouteImport } from './routes/app/history'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppContactRouteImport } from './routes/app/contact'
@@ -57,6 +58,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
   path: '/app/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppLivraisonRoute = AppLivraisonRouteImport.update({
+  id: '/app/livraison',
+  path: '/app/livraison',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppHistoryRoute = AppHistoryRouteImport.update({
   id: '/app/history',
   path: '/app/history',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
+  '/app/livraison': typeof AppLivraisonRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
+  '/app/livraison': typeof AppLivraisonRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
+  '/app/livraison': typeof AppLivraisonRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/order': typeof AppOrderRoute
   '/app/products': typeof AppProductsRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
+    | '/app/livraison'
     | '/app/notifications'
     | '/app/order'
     | '/app/products'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
+    | '/app/livraison'
     | '/app/notifications'
     | '/app/order'
     | '/app/products'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
+    | '/app/livraison'
     | '/app/notifications'
     | '/app/order'
     | '/app/products'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   AppContactRoute: typeof AppContactRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppHistoryRoute: typeof AppHistoryRoute
+  AppLivraisonRoute: typeof AppLivraisonRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOrderRoute: typeof AppOrderRoute
   AppProductsRoute: typeof AppProductsRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/livraison': {
+      id: '/app/livraison'
+      path: '/app/livraison'
+      fullPath: '/app/livraison'
+      preLoaderRoute: typeof AppLivraisonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/history': {
       id: '/app/history'
       path: '/app/history'
@@ -283,6 +303,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppContactRoute: AppContactRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppHistoryRoute: AppHistoryRoute,
+  AppLivraisonRoute: AppLivraisonRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOrderRoute: AppOrderRoute,
   AppProductsRoute: AppProductsRoute,
