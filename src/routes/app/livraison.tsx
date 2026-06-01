@@ -74,8 +74,10 @@ function LivraisonPage() {
   const { user, profile, isAdmin, refresh } = useAuth();
   const [cart, setCart] = useState<Record<string, number>>({});
   const [address, setAddress] = useState("");
+  const [restaurant, setRestaurant] = useState("");
   const [phone, setPhone] = useState(profile?.phone ?? "");
   const [note, setNote] = useState("");
+  const [coords, setCoords] = useState<Coords | null>(null);
   const [loading, setLoading] = useState(false);
   const [overrides, setOverrides] = useState<Overrides>({});
   const [editingId, setEditingId] = useState<string | null>(null);
