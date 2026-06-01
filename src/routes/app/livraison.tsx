@@ -275,12 +275,18 @@ function LivraisonPage() {
           <div className="font-bold">Votre commande</div>
         </div>
         <div className="space-y-2 mb-3">
+          <label className="text-xs flex items-center gap-1"><Store className="h-3 w-3" /> Restaurant de votre choix (optionnel)</label>
+          <Input value={restaurant} onChange={(e) => setRestaurant(e.target.value)} placeholder="Ex: Mama Put, Chez Aïsha, etc." maxLength={120} />
           <label className="text-xs">Adresse de livraison</label>
           <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Quartier, rue, repère…" />
           <label className="text-xs">Téléphone</label>
           <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Numéro de contact" />
           <label className="text-xs">Note (optionnel)</label>
           <Textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Sans piment, bien cuit, etc." rows={2} />
+          <div className="pt-2">
+            <div className="text-xs font-semibold mb-2">Position GPS (temps réel)</div>
+            <GpsCapture coords={coords} setCoords={setCoords} />
+          </div>
         </div>
         <div className="flex items-center justify-between border-t border-orange-500/20 pt-3">
           <div>
