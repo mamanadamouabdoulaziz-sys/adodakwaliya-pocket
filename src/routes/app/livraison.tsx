@@ -152,11 +152,21 @@ function LivraisonPage() {
       const items = Object.entries(cart)
         .map(([id, q]) => {
           const d = allDishes.find((x) => x.id === id)!;
-          return `${d.name} x${q}`;
+          return `${d.name} x${q} (${formatXOF(d.price * q)})`;
         })
-        .join(", ");
+        .join("\n  • ");
       const subject = `Livraison repas - ${formatXOF(total)}`;
-      const message = `Commande: ${items}\nTotal: ${formatXOF(total)}\nAdresse: ${address}\nTéléphone: ${phone}\nNote: ${note || "—"}`;
+      const message =
+        `Client: ${profile?.first_name ?? ""} ${profile?.last_name ?? ""}\n` +
+        `Compte: ${profile?.account_number ?? "—"}\n` +
+        `Téléphone client: ${profile?.phone ?? "—"}\n` +
+        `\n— Commande —\n  • ${items}\n` +
+        `Total: ${formatXOF(total)}\n` +
+        `Restaurant souhaité: ${restaurant || "— (au choix de l'admin)"}\n` +
+        `Adresse de livraison: ${address}\n` +
+        `Téléphone de contact: ${phone}\n` +
+        `Note: ${note || "—"}\n` +
+        `\nPosition GPS: ${coords ? gmapsLink(coords) : "non partagée"}`;
       const { error } = await supabase.from("contact_messages").insert({
         user_id: user.id,
         subject,
@@ -166,6 +176,7 @@ function LivraisonPage() {
       toast.success("Commande envoyée ! Un administrateur vous contactera.");
       setCart({});
       setAddress("");
+      setRestaurant("");
       setNote("");
       await refresh();
     } catch (e) {
