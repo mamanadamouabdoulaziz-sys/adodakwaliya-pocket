@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { Send, Package, Bell, Shield, LogOut, ShoppingCart, Wifi, Car, Home, Utensils } from "lucide-react";
+import { Send, Package, Bell, Shield, LogOut, ShoppingCart, Wifi, Car, Home, Utensils, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AppShell({ children, requireAdmin = false }: { children: ReactNode; requireAdmin?: boolean }) {
@@ -29,7 +29,8 @@ export function AppShell({ children, requireAdmin = false }: { children: ReactNo
     { to: "/app/products", icon: Package, label: "Produits", color: "#34d399" },
     { to: "/app/wifi", icon: Wifi, label: "WIFI", color: "#8b5cf6" },
     { to: "/app/adedeta", icon: Car, label: "ADEDETA", color: "#facc15" },
-    { to: "/app/livraison", icon: Utensils, label: "Livraison", color: "#f97316" },
+    { to: "/app/livraison", icon: Utensils, label: "Repas", color: "#f97316" },
+    { to: "/app/colis", icon: Truck, label: "Colis", color: "#facc15" },
   ];
 
   return (

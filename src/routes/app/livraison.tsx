@@ -7,8 +7,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Utensils, Minus, Plus, ShoppingBag, Pencil, Check, X } from "lucide-react";
+import { Utensils, Minus, Plus, ShoppingBag, Pencil, Check, X, Store } from "lucide-react";
 import { toast } from "sonner";
+import { GpsCapture, gmapsLink, type Coords } from "@/components/LiveMap";
 
 export const Route = createFileRoute("/app/livraison")({ component: LivraisonPage });
 
@@ -73,8 +74,10 @@ function LivraisonPage() {
   const { user, profile, isAdmin, refresh } = useAuth();
   const [cart, setCart] = useState<Record<string, number>>({});
   const [address, setAddress] = useState("");
+  const [restaurant, setRestaurant] = useState("");
   const [phone, setPhone] = useState(profile?.phone ?? "");
   const [note, setNote] = useState("");
+  const [coords, setCoords] = useState<Coords | null>(null);
   const [loading, setLoading] = useState(false);
   const [overrides, setOverrides] = useState<Overrides>({});
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -149,11 +152,21 @@ function LivraisonPage() {
       const items = Object.entries(cart)
         .map(([id, q]) => {
           const d = allDishes.find((x) => x.id === id)!;
-          return `${d.name} x${q}`;
+          return `${d.name} x${q} (${formatXOF(d.price * q)})`;
         })
-        .join(", ");
+        .join("\n  • ");
       const subject = `Livraison repas - ${formatXOF(total)}`;
-      const message = `Commande: ${items}\nTotal: ${formatXOF(total)}\nAdresse: ${address}\nTéléphone: ${phone}\nNote: ${note || "—"}`;
+      const message =
+        `Client: ${profile?.first_name ?? ""} ${profile?.last_name ?? ""}\n` +
+        `Compte: ${profile?.account_number ?? "—"}\n` +
+        `Téléphone client: ${profile?.phone ?? "—"}\n` +
+        `\n— Commande —\n  • ${items}\n` +
+        `Total: ${formatXOF(total)}\n` +
+        `Restaurant souhaité: ${restaurant || "— (au choix de l'admin)"}\n` +
+        `Adresse de livraison: ${address}\n` +
+        `Téléphone de contact: ${phone}\n` +
+        `Note: ${note || "—"}\n` +
+        `\nPosition GPS: ${coords ? gmapsLink(coords) : "non partagée"}`;
       const { error } = await supabase.from("contact_messages").insert({
         user_id: user.id,
         subject,
@@ -163,6 +176,7 @@ function LivraisonPage() {
       toast.success("Commande envoyée ! Un administrateur vous contactera.");
       setCart({});
       setAddress("");
+      setRestaurant("");
       setNote("");
       await refresh();
     } catch (e) {
@@ -261,12 +275,18 @@ function LivraisonPage() {
           <div className="font-bold">Votre commande</div>
         </div>
         <div className="space-y-2 mb-3">
+          <label className="text-xs flex items-center gap-1"><Store className="h-3 w-3" /> Restaurant de votre choix (optionnel)</label>
+          <Input value={restaurant} onChange={(e) => setRestaurant(e.target.value)} placeholder="Ex: Mama Put, Chez Aïsha, etc." maxLength={120} />
           <label className="text-xs">Adresse de livraison</label>
           <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Quartier, rue, repère…" />
           <label className="text-xs">Téléphone</label>
           <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Numéro de contact" />
           <label className="text-xs">Note (optionnel)</label>
           <Textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Sans piment, bien cuit, etc." rows={2} />
+          <div className="pt-2">
+            <div className="text-xs font-semibold mb-2">Position GPS (temps réel)</div>
+            <GpsCapture coords={coords} setCoords={setCoords} />
+          </div>
         </div>
         <div className="flex items-center justify-between border-t border-orange-500/20 pt-3">
           <div>

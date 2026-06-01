@@ -20,6 +20,7 @@ import { Route as AppLivraisonRouteImport } from './routes/app/livraison'
 import { Route as AppHistoryRouteImport } from './routes/app/history'
 import { Route as AppDashboardRouteImport } from './routes/app/dashboard'
 import { Route as AppContactRouteImport } from './routes/app/contact'
+import { Route as AppColisRouteImport } from './routes/app/colis'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppAdedetaRouteImport } from './routes/app/adedeta'
 
@@ -78,6 +79,11 @@ const AppContactRoute = AppContactRouteImport.update({
   path: '/app/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppColisRoute = AppColisRouteImport.update({
+  id: '/app/colis',
+  path: '/app/colis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/app/admin',
   path: '/app/admin',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/colis': typeof AppColisRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/colis': typeof AppColisRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/app/adedeta': typeof AppAdedetaRoute
   '/app/admin': typeof AppAdminRoute
+  '/app/colis': typeof AppColisRoute
   '/app/contact': typeof AppContactRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/history': typeof AppHistoryRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/adedeta'
     | '/app/admin'
+    | '/app/colis'
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/adedeta'
     | '/app/admin'
+    | '/app/colis'
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/app/adedeta'
     | '/app/admin'
+    | '/app/colis'
     | '/app/contact'
     | '/app/dashboard'
     | '/app/history'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   AppAdedetaRoute: typeof AppAdedetaRoute
   AppAdminRoute: typeof AppAdminRoute
+  AppColisRoute: typeof AppColisRoute
   AppContactRoute: typeof AppContactRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppHistoryRoute: typeof AppHistoryRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/colis': {
+      id: '/app/colis'
+      path: '/app/colis'
+      fullPath: '/app/colis'
+      preLoaderRoute: typeof AppColisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/admin': {
       id: '/app/admin'
       path: '/app/admin'
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   AppAdedetaRoute: AppAdedetaRoute,
   AppAdminRoute: AppAdminRoute,
+  AppColisRoute: AppColisRoute,
   AppContactRoute: AppContactRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppHistoryRoute: AppHistoryRoute,
@@ -313,13 +334,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
