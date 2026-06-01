@@ -7,8 +7,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Utensils, Minus, Plus, ShoppingBag, Pencil, Check, X } from "lucide-react";
+import { Utensils, Minus, Plus, ShoppingBag, Pencil, Check, X, Store } from "lucide-react";
 import { toast } from "sonner";
+import { GpsCapture, gmapsLink, type Coords } from "@/components/LiveMap";
 
 export const Route = createFileRoute("/app/livraison")({ component: LivraisonPage });
 
