@@ -12,10 +12,15 @@ import { AFRICAN_COUNTRIES } from "@/lib/african-countries";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    mode: (s.mode === "signup" ? "signup" : "login") as "signup" | "login",
-    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>) => {
+    const out: { mode: "signup" | "login"; next?: string } = {
+      mode: s.mode === "signup" ? "signup" : "login",
+    };
+    if (typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//")) {
+      out.next = s.next;
+    }
+    return out;
+  },
   component: AuthPage,
 });
 
