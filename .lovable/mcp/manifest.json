@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://okesouwopznfaubfhgqi.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "ado-da-kwaliya-mcp",
+      "version": "0.1.0",
+      "title": "Ado Da Kwaliya"
+    },
+    "tools": [
+      {
+        "name": "get_my_profile",
+        "title": "Obtenir mon profil",
+        "description": "Retourne le profil de l'utilisateur connecté (prénom, nom, téléphone, numéro de compte et solde).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_notifications",
+        "title": "Lister mes notifications",
+        "description": "Retourne les notifications récentes de l'utilisateur connecté.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "Nombre maximum (défaut 20)."
+            },
+            "unread_only": {
+              "type": "boolean",
+              "description": "Ne renvoyer que les non lues."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_messages",
+        "title": "Lister mes messages",
+        "description": "Retourne les messages envoyés à l'équipe (commandes de repas, colis, contact) par l'utilisateur connecté.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "Nombre maximum (défaut 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "send_contact_message",
+        "title": "Envoyer un message à l'équipe",
+        "description": "Envoie un message (sujet + contenu) aux administrateurs au nom de l'utilisateur connecté.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "description": "Sujet du message."
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5000,
+              "description": "Contenu du message."
+            }
+          },
+          "required": [
+            "subject",
+            "message"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

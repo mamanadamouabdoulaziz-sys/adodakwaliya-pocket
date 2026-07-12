@@ -12,9 +12,15 @@ import { AFRICAN_COUNTRIES } from "@/lib/african-countries";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    mode: (s.mode === "signup" ? "signup" : "login") as "signup" | "login",
-  }),
+  validateSearch: (s: Record<string, unknown>) => {
+    const out: { mode: "signup" | "login"; next?: string } = {
+      mode: s.mode === "signup" ? "signup" : "login",
+    };
+    if (typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//")) {
+      out.next = s.next;
+    }
+    return out;
+  },
   component: AuthPage,
 });
 
@@ -24,11 +30,14 @@ const passwordSchema = z.string().min(6, "Mot de passe trop court").max(72);
 function AuthPage() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
-  const { mode } = Route.useSearch();
+  const { mode, next } = Route.useSearch();
 
   useEffect(() => {
-    if (!loading && session) navigate({ to: "/app/dashboard" });
-  }, [loading, session, navigate]);
+    if (!loading && session) {
+      if (next) window.location.href = next;
+      else navigate({ to: "/app/dashboard" });
+    }
+  }, [loading, session, navigate, next]);
 
   return (
     <div className="min-h-screen bg-brand-gradient flex items-center justify-center px-4 py-10">
